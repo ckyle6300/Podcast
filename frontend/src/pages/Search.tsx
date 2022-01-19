@@ -16,14 +16,10 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 const Search: React.FC = () => {
   const [userSearch, setUserSearch] = useState<string>('');
 
-  console.log('hello');
-  console.log(userSearch);
-
   useEffect(() => {
     const getUrl = async () => {
       const data = await fetch('http://localhost:5100/podcast/search', {
         method: 'POST',
-        mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ search: userSearch }),
       });

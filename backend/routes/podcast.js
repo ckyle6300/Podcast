@@ -11,8 +11,8 @@ const client = new PodcastIndexClient({
 });
 
 router.post('/search', async (req, res) => {
-  console.log('hello');
   const { search } = req.body;
+  console.log('hello');
   const podcast = await client.search(search);
   res.json(podcast);
 });
