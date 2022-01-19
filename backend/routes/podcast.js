@@ -10,9 +10,10 @@ const client = new PodcastIndexClient({
   disableAnalytics: true,
 });
 
-router.get('/search', async (req, res) => {
+router.post('/search', async (req, res) => {
+  console.log('hello');
   const { search } = req.body;
-  const podcast = await client.search('anarchism');
+  const podcast = await client.search(search);
   res.json(podcast);
 });
 
