@@ -1,4 +1,6 @@
 import {
+  IonCard,
+  IonCardTitle,
   IonCol,
   IonContent,
   IonGrid,
@@ -15,6 +17,7 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 
 const Search: React.FC = () => {
   const [userSearch, setUserSearch] = useState<string>('');
+  const [podcasts, setPodcasts] = useState([]);
 
   useEffect(() => {
     const getUrl = async () => {
@@ -23,39 +26,53 @@ const Search: React.FC = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ search: userSearch }),
       });
-      const parsedDate = await data.json();
-      console.log(parsedDate);
+      const parsedData = await data.json();
+      setPodcasts(parsedData.feeds);
     };
 
     let searchTimer: any;
 
     if (userSearch.length > 3) {
-      searchTimer = setTimeout(getUrl, 2000);
+      searchTimer = setTimeout(getUrl, 1500);
     }
 
     return () => clearTimeout(searchTimer);
   }, [userSearch]);
 
+  console.log(podcasts);
+
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
+        <IonToolbar color='primary'>
           <IonTitle>Search Podcasts</IonTitle>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent>
+      <IonContent color='secondary'>
         <IonGrid>
-          <IonRow>
+          <IonRow className='ion-padding-top'>
             <IonCol sizeSm='6' offsetSm='3'>
               <IonItem>
-                <IonLabel position='floating'>Search</IonLabel>
+                <IonLabel color='dark' position='floating'>
+                  Search
+                </IonLabel>
                 <IonInput
                   value={userSearch}
                   onIonChange={(e) => setUserSearch(e.detail.value!)}
                 />
               </IonItem>
             </IonCol>
+          </IonRow>
+          <IonRow>
+            {podcasts.map((podcast, index) => (
+              <IonCol size='6' key={index}>
+                <IonCard className='ion-text-center' color='dark'>
+                  <img src={podcast.artwork} />
+                  <IonCardTitle>{podcast.title}</IonCardTitle>
+                </IonCard>
+              </IonCol>
+            ))}
           </IonRow>
         </IonGrid>
       </IonContent>
