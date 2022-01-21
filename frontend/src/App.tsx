@@ -28,6 +28,7 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import PodcastInfo from './pages/PodcastInfo';
 
 setupIonicReact();
 
@@ -43,6 +44,9 @@ const App: React.FC = () => {
             </Route>
             <Route path='/podcasts/search' exact>
               <Search />
+            </Route>
+            <Route path='/podcast/:podcastId' exact>
+              <PodcastInfo />
             </Route>
             <Route path='/page/:name' exact={true}>
               <Page />

@@ -55,11 +55,10 @@ const Search: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color='primary'>
+        <IonToolbar color='primary' className='ion-text-center'>
           <IonTitle>Search Podcasts</IonTitle>
         </IonToolbar>
       </IonHeader>
-
       <IonContent color='secondary'>
         <IonGrid>
           <IonRow className='ion-padding-top'>
@@ -80,7 +79,7 @@ const Search: React.FC = () => {
               <IonCol size='6' sizeSm='4' key={index}>
                 <IonCard
                   className='ion-text-center'
-                  href={`podcasts/${podcast.id}`}
+                  href={`podcast/${podcast.id}`}
                   color='dark'
                 >
                   <img src={podcast.artwork} />
