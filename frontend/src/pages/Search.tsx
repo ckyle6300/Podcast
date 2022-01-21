@@ -15,9 +15,22 @@ import {
 } from '@ionic/react';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 
+export interface IPod {
+  id: number;
+  artwork: string;
+  description: string;
+  image: string;
+  link: string;
+  ownerName: string;
+  url: string;
+  itunesId: number;
+  author: string;
+  title: string;
+}
+
 const Search: React.FC = () => {
   const [userSearch, setUserSearch] = useState<string>('');
-  const [podcasts, setPodcasts] = useState([]);
+  const [podcasts, setPodcasts] = useState<IPod[]>([]);
 
   useEffect(() => {
     const getUrl = async () => {
@@ -32,14 +45,12 @@ const Search: React.FC = () => {
 
     let searchTimer: any;
 
-    if (userSearch.length > 3) {
+    if (userSearch.length >= 3) {
       searchTimer = setTimeout(getUrl, 1500);
     }
 
     return () => clearTimeout(searchTimer);
   }, [userSearch]);
-
-  console.log(podcasts);
 
   return (
     <IonPage>
@@ -66,8 +77,12 @@ const Search: React.FC = () => {
           </IonRow>
           <IonRow>
             {podcasts.map((podcast, index) => (
-              <IonCol size='6' key={index}>
-                <IonCard className='ion-text-center' color='dark'>
+              <IonCol size='6' sizeSm='4' key={index}>
+                <IonCard
+                  className='ion-text-center'
+                  href={`podcasts/${podcast.id}`}
+                  color='dark'
+                >
                   <img src={podcast.artwork} />
                   <IonCardTitle>{podcast.title}</IonCardTitle>
                 </IonCard>

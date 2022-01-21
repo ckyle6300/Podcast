@@ -47,6 +47,9 @@ const App: React.FC = () => {
             <Route path='/page/:name' exact={true}>
               <Page />
             </Route>
+            <Route>
+              <h1>404</h1>
+            </Route>
           </IonRouterOutlet>
         </IonSplitPane>
       </IonReactRouter>
