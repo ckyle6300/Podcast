@@ -16,9 +16,11 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
 import { IPod } from './Search';
+import 'shikwasa/dist/shikwasa.min.css';
+import Shikwasa from 'shikwasa';
 
 export interface Episode {
   chapterUrl: string;
@@ -46,6 +48,7 @@ const PodcastInfo: React.FC = () => {
   const [episodes, setEpisodes] = useState<Episode[]>([]);
 
   console.log(podcastId);
+  let player: any;
 
   useEffect(() => {
     const getPodcastInfo = async () => {
@@ -57,6 +60,31 @@ const PodcastInfo: React.FC = () => {
     };
     getPodcastInfo();
   }, []);
+
+  let podInfo: any;
+
+  const buttonHandler = (idx: number) => {
+    if (podInfo) {
+      player.update({
+        title: podInfo.title,
+        artist: podInfo.episode,
+        cover: podInfo.image,
+        src: podInfo.enclosureUrl,
+        themeColor: '#000',
+      });
+    }
+    podInfo = episodes[idx];
+    console.log(podInfo);
+    player = new Shikwasa({
+      container: () => document.getElementById('players'),
+      audio: {
+        title: podInfo.title,
+        artist: podInfo.episode,
+        cover: podInfo.image,
+        src: podInfo.enclosureUrl,
+      },
+    });
+  };
 
   return (
     <IonPage>
@@ -78,11 +106,18 @@ const PodcastInfo: React.FC = () => {
               </IonCard>
             </IonCol>
           </IonRow>
+          <h2>Episodes</h2>
           <IonRow>
-            <h2>Episodes</h2>
             {episodes &&
-              episodes.map((epi) => (
-                <IonCard color='dark' className='ion-no-margin' key={epi.id}>
+              episodes.map((epi, idx) => (
+                <IonCard
+                  button
+                  onClick={() => buttonHandler(idx)}
+                  color='dark'
+                  style={{ width: '100%' }}
+                  className='ion-no-margin'
+                  key={idx}
+                >
                   <IonCardHeader>
                     <IonCardTitle>{epi.title}</IonCardTitle>
                     <IonCardSubtitle>{epi.description}</IonCardSubtitle>
@@ -92,7 +127,7 @@ const PodcastInfo: React.FC = () => {
           </IonRow>
         </IonGrid>
       </IonContent>
-      <IonFooter></IonFooter>
+      <IonFooter id='players'></IonFooter>
     </IonPage>
   );
 };
