@@ -16,22 +16,22 @@ import {
 } from '@ionic/react';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 
-export interface IPod {
-  id: number;
-  artwork: string;
-  description: string;
-  image: string;
-  link: string;
-  ownerName: string;
-  url: string;
-  itunesId: number;
-  author: string;
-  title: string;
-}
+// export interface IPod {
+//   id: number;
+//   artwork: string;
+//   description: string;
+//   image: string;
+//   link: string;
+//   ownerName: string;
+//   url: string;
+//   itunesId: number;
+//   author: string;
+//   title: string;
+// }
 
-const Search: React.FC = () => {
-  const [userSearch, setUserSearch] = useState<string>('');
-  const [podcasts, setPodcasts] = useState<IPod[]>([]);
+const Search = () => {
+  const [userSearch, setUserSearch] = useState('');
+  const [podcasts, setPodcasts] = useState([]);
 
   useEffect(() => {
     const getUrl = async () => {
@@ -44,7 +44,7 @@ const Search: React.FC = () => {
       setPodcasts(parsedData.feeds);
     };
 
-    let searchTimer: any;
+    let searchTimer;
 
     if (userSearch.length >= 3) {
       searchTimer = setTimeout(getUrl, 1500);
@@ -69,8 +69,10 @@ const Search: React.FC = () => {
                   Search
                 </IonLabel>
                 <IonInput
+                  minlength={3}
+                  autofocus={true}
                   value={userSearch}
-                  onIonChange={(e) => setUserSearch(e.detail.value!)}
+                  onIonChange={(e) => setUserSearch(e.detail.value)}
                 />
               </IonItem>
             </IonCol>
@@ -80,7 +82,7 @@ const Search: React.FC = () => {
               <IonCol size='6' sizeSm='4' key={index}>
                 <IonCard
                   className='ion-text-center'
-                  href={`podcast/${podcast.id}`}
+                  href={`podcasts/${podcast.id}`}
                   color='dark'
                 >
                   <img src={podcast.artwork} />

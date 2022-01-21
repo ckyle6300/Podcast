@@ -1,4 +1,6 @@
 import {
+  IonBackButton,
+  IonButtons,
   IonCard,
   IonCardHeader,
   IonCardSubtitle,
@@ -21,34 +23,36 @@ import { useParams } from 'react-router';
 import { IPod } from './Search';
 import 'shikwasa/dist/shikwasa.min.css';
 import Shikwasa from 'shikwasa';
+import Chapter from 'shikwasa/dist/shikwasa.chapter.cjs';
+import 'shikwasa/dist/shikwasa.chapter.css';
 
-export interface Episode {
-  chapterUrl: string;
-  datePublished: number;
-  datePublishedPretty: string;
-  description: string;
-  duration: number;
-  enclosureLength: number;
-  enclosureType: number;
-  enclosureUrl: string;
-  episode: number | null;
-  feedId: number;
-  feedImage: string;
-  id: number;
-  image: string;
-  link: string;
-  title: string;
-  season: number;
-  transcriptUrl: string | null;
-}
+// export interface Episode {
+//   chapterUrl: string;
+//   datePublished: number;
+//   datePublishedPretty: string;
+//   description: string;
+//   duration: number;
+//   enclosureLength: number;
+//   enclosureType: number;
+//   enclosureUrl: string;
+//   episode: number | null;
+//   feedId: number;
+//   feedImage: string;
+//   id: number;
+//   image: string;
+//   link: string;
+//   title: string;
+//   season: number;
+//   transcriptUrl: string | null;
+// }
 
-const PodcastInfo: React.FC = () => {
-  const { podcastId }: { podcastId: string } = useParams();
-  const [podcast, setPodcast] = useState<IPod>();
-  const [episodes, setEpisodes] = useState<Episode[]>([]);
+const PodcastInfo = () => {
+  const { podcastId } = useParams();
+  const [podcast, setPodcast] = useState();
+  const [episodes, setEpisodes] = useState([]);
 
   console.log(podcastId);
-  let player: any;
+  let player;
 
   useEffect(() => {
     const getPodcastInfo = async () => {
@@ -61,20 +65,40 @@ const PodcastInfo: React.FC = () => {
     getPodcastInfo();
   }, []);
 
-  let podInfo: any;
+  let podInfo;
 
-  const buttonHandler = (idx: number) => {
-    if (podInfo) {
-      player.update({
-        title: podInfo.title,
-        artist: podInfo.episode,
-        cover: podInfo.image,
-        src: podInfo.enclosureUrl,
-        themeColor: '#000',
+  const buttonHandler = async (idx) => {
+    if (podInfo != episodes[idx] && podInfo !== undefined) {
+      podInfo = episodes[idx];
+      const data = await fetch('http://localhost:5100/podcast/chapters', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chapterUrl: podInfo.chaptersUrl }),
       });
+
+      const chp = await data.json();
+      const TAudio = {
+        src: podInfo.enclosureUrl,
+        cover: podInfo.image,
+        title: podInfo.title,
+        artist: podcast.author,
+        duration: podInfo.duration,
+        chapters: chp,
+      };
+      player.update(TAudio);
+      return;
     }
+
     podInfo = episodes[idx];
-    console.log(podInfo);
+    const data = await fetch('http://localhost:5100/podcast/chapters', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chapterUrl: podInfo.chaptersUrl }),
+    });
+
+    const chp = await data.json();
+
+    Shikwasa.use(Chapter);
     player = new Shikwasa({
       container: () => document.getElementById('players'),
       audio: {
@@ -82,7 +106,11 @@ const PodcastInfo: React.FC = () => {
         artist: podInfo.episode,
         cover: podInfo.image,
         src: podInfo.enclosureUrl,
+        chapters: chp,
       },
+      theme: 'dark',
+      speedOptions: [0.75, 1, 1.25, 1.5, 1.75, 2, 2.25],
+      autoplay: true,
     });
   };
 
@@ -90,6 +118,9 @@ const PodcastInfo: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar color='primary' className='ion-text-center'>
+          <IonButtons slot='start'>
+            <IonBackButton defaultHref='search' />
+          </IonButtons>
           <IonTitle>{podcast ? podcast.title : ''}</IonTitle>
         </IonToolbar>
       </IonHeader>

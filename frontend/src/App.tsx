@@ -5,7 +5,7 @@ import {
   setupIonicReact,
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import Menu from './components/Menu';
 import Page from './pages/Page';
 import Search from './pages/Search';
@@ -39,21 +39,23 @@ const App: React.FC = () => {
         <IonSplitPane contentId='main'>
           <Menu />
           <IonRouterOutlet id='main'>
-            <Route path='/' exact={true}>
-              <Redirect to='/page/Inbox' />
-            </Route>
-            <Route path='/podcasts/search' exact>
-              <Search />
-            </Route>
-            <Route path='/podcast/:podcastId' exact>
-              <PodcastInfo />
-            </Route>
-            <Route path='/page/:name' exact={true}>
-              <Page />
-            </Route>
-            <Route>
-              <h1>404</h1>
-            </Route>
+            <Switch>
+              <Route path='/' exact={true}>
+                <Redirect to='/page/Inbox' />
+              </Route>
+              <Route path='/podcasts/search' exact>
+                <Search />
+              </Route>
+              <Route path='/podcasts/:podcastId' exact>
+                <PodcastInfo />
+              </Route>
+              <Route path='/page/:name' exact={true}>
+                <Page />
+              </Route>
+              <Route>
+                <h1>404</h1>
+              </Route>
+            </Switch>
           </IonRouterOutlet>
         </IonSplitPane>
       </IonReactRouter>

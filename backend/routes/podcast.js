@@ -1,5 +1,6 @@
 const express = require('express');
 const PodcastIndexClient = require('podcastdx-client');
+const fetch = require('node-fetch');
 
 const router = express.Router();
 
@@ -21,6 +22,13 @@ router.get('/:podcastId', async (req, res) => {
   const podcast = await client.podcastById(podcastId);
   const episodes = await client.episodesByFeedId(podcastId, { max: 1000 });
   res.json({ podcast, episodes });
+});
+
+router.post('/chapters', async (req, res) => {
+  const chapterUrl = req.body.chapterUrl;
+  const data = await fetch(chapterUrl);
+  const chap = await data.json();
+  res.send(chap.chapters);
 });
 
 module.exports = router;
