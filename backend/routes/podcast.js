@@ -26,9 +26,12 @@ router.get('/:podcastId', async (req, res) => {
 
 router.post('/chapters', async (req, res) => {
   const chapterUrl = req.body.chapterUrl;
-  const data = await fetch(chapterUrl);
-  const chap = await data.json();
-  res.send(chap.chapters);
+  if (chapterUrl) {
+    const data = await fetch(chapterUrl);
+    const chap = await data.json();
+    return res.send(chap.chapters);
+  }
+  return res.json([]);
 });
 
 module.exports = router;

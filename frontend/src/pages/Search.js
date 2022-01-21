@@ -16,19 +16,6 @@ import {
 } from '@ionic/react';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 
-// export interface IPod {
-//   id: number;
-//   artwork: string;
-//   description: string;
-//   image: string;
-//   link: string;
-//   ownerName: string;
-//   url: string;
-//   itunesId: number;
-//   author: string;
-//   title: string;
-// }
-
 const Search = () => {
   const [userSearch, setUserSearch] = useState('');
   const [podcasts, setPodcasts] = useState([]);

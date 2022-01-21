@@ -1,4 +1,5 @@
 import {
+  IonAvatar,
   IonBackButton,
   IonButtons,
   IonCard,
@@ -10,9 +11,12 @@ import {
   IonFooter,
   IonGrid,
   IonHeader,
-  IonInput,
+  IonIcon,
+  IonImg,
   IonItem,
   IonLabel,
+  IonList,
+  IonListHeader,
   IonPage,
   IonRow,
   IonTitle,
@@ -20,31 +24,11 @@ import {
 } from '@ionic/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
-import { IPod } from './Search';
 import 'shikwasa/dist/shikwasa.min.css';
 import Shikwasa from 'shikwasa';
 import Chapter from 'shikwasa/dist/shikwasa.chapter.cjs';
 import 'shikwasa/dist/shikwasa.chapter.css';
-
-// export interface Episode {
-//   chapterUrl: string;
-//   datePublished: number;
-//   datePublishedPretty: string;
-//   description: string;
-//   duration: number;
-//   enclosureLength: number;
-//   enclosureType: number;
-//   enclosureUrl: string;
-//   episode: number | null;
-//   feedId: number;
-//   feedImage: string;
-//   id: number;
-//   image: string;
-//   link: string;
-//   title: string;
-//   season: number;
-//   transcriptUrl: string | null;
-// }
+import { playOutline } from 'ionicons/icons';
 
 const PodcastInfo = () => {
   const { podcastId } = useParams();
@@ -69,6 +53,7 @@ const PodcastInfo = () => {
 
   const buttonHandler = async (idx) => {
     if (podInfo != episodes[idx] && podInfo !== undefined) {
+      console.log('inside the if');
       podInfo = episodes[idx];
       const data = await fetch('http://localhost:5100/podcast/chapters', {
         method: 'POST',
@@ -89,6 +74,7 @@ const PodcastInfo = () => {
       return;
     }
 
+    console.log('not in if');
     podInfo = episodes[idx];
     const data = await fetch('http://localhost:5100/podcast/chapters', {
       method: 'POST',
@@ -97,6 +83,7 @@ const PodcastInfo = () => {
     });
 
     const chp = await data.json();
+    console.log(chp);
 
     Shikwasa.use(Chapter);
     player = new Shikwasa({
@@ -137,24 +124,32 @@ const PodcastInfo = () => {
               </IonCard>
             </IonCol>
           </IonRow>
-          <h2>Episodes</h2>
+
           <IonRow>
-            {episodes &&
-              episodes.map((epi, idx) => (
-                <IonCard
-                  button
-                  onClick={() => buttonHandler(idx)}
-                  color='dark'
-                  style={{ width: '100%' }}
-                  className='ion-no-margin'
-                  key={idx}
-                >
-                  <IonCardHeader>
-                    <IonCardTitle>{epi.title}</IonCardTitle>
-                    <IonCardSubtitle>{epi.description}</IonCardSubtitle>
-                  </IonCardHeader>
-                </IonCard>
-              ))}
+            <IonList className='ion-no-padding'>
+              <IonListHeader color='dark'>
+                <h1 className='ion-text-center'>Episodes</h1>
+              </IonListHeader>
+              {episodes &&
+                episodes.map((epi, idx) => (
+                  <IonItem color='dark' key={idx}>
+                    <IonAvatar slot='start'>
+                      <IonImg src={epi.feedImage} />
+                    </IonAvatar>
+                    <IonLabel className='ion-text-wrap'>
+                      <h1>{epi.title}</h1>
+                      <h3>{epi.description}</h3>
+                      <p>{epi.datePublishedPretty}</p>
+                    </IonLabel>
+                    <IonIcon
+                      slot='end'
+                      button
+                      icon={playOutline}
+                      onClick={() => buttonHandler(idx)}
+                    />
+                  </IonItem>
+                ))}
+            </IonList>
           </IonRow>
         </IonGrid>
       </IonContent>
