@@ -1,5 +1,6 @@
 import {
   IonCard,
+  IonCardHeader,
   IonCardTitle,
   IonCol,
   IonContent,
@@ -15,22 +16,9 @@ import {
 } from '@ionic/react';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 
-export interface IPod {
-  id: number;
-  artwork: string;
-  description: string;
-  image: string;
-  link: string;
-  ownerName: string;
-  url: string;
-  itunesId: number;
-  author: string;
-  title: string;
-}
-
-const Search: React.FC = () => {
-  const [userSearch, setUserSearch] = useState<string>('');
-  const [podcasts, setPodcasts] = useState<IPod[]>([]);
+const Search = () => {
+  const [userSearch, setUserSearch] = useState('');
+  const [podcasts, setPodcasts] = useState([]);
 
   useEffect(() => {
     const getUrl = async () => {
@@ -43,7 +31,7 @@ const Search: React.FC = () => {
       setPodcasts(parsedData.feeds);
     };
 
-    let searchTimer: any;
+    let searchTimer;
 
     if (userSearch.length >= 3) {
       searchTimer = setTimeout(getUrl, 1500);
@@ -55,11 +43,10 @@ const Search: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color='primary'>
+        <IonToolbar color='primary' className='ion-text-center'>
           <IonTitle>Search Podcasts</IonTitle>
         </IonToolbar>
       </IonHeader>
-
       <IonContent color='secondary'>
         <IonGrid>
           <IonRow className='ion-padding-top'>
@@ -69,8 +56,10 @@ const Search: React.FC = () => {
                   Search
                 </IonLabel>
                 <IonInput
+                  minlength={3}
+                  autofocus={true}
                   value={userSearch}
-                  onIonChange={(e) => setUserSearch(e.detail.value!)}
+                  onIonChange={(e) => setUserSearch(e.detail.value)}
                 />
               </IonItem>
             </IonCol>
@@ -84,7 +73,9 @@ const Search: React.FC = () => {
                   color='dark'
                 >
                   <img src={podcast.artwork} />
-                  <IonCardTitle>{podcast.title}</IonCardTitle>
+                  <IonCardHeader className='ion-no-padding'>
+                    <IonCardTitle>{podcast.title}</IonCardTitle>
+                  </IonCardHeader>
                 </IonCard>
               </IonCol>
             ))}
