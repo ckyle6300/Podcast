@@ -90,7 +90,7 @@ const PodcastInfo = () => {
       container: () => document.getElementById('players'),
       audio: {
         title: podInfo.title,
-        artist: podInfo.episode,
+        artist: podcast.author,
         cover: podInfo.image,
         src: podInfo.enclosureUrl,
         chapters: chp,
@@ -114,7 +114,7 @@ const PodcastInfo = () => {
       <IonContent color='secondary'>
         <IonGrid>
           <IonRow>
-            <IonCol sizeSm='6' offsetSm='3'>
+            <IonCol className='ion-no-padding' sizeSm='6' offsetSm='3'>
               <IonCard color='dark'>
                 <img src={podcast?.artwork} />
                 <IonCardHeader>
@@ -126,30 +126,32 @@ const PodcastInfo = () => {
           </IonRow>
 
           <IonRow>
-            <IonList className='ion-no-padding'>
-              <IonListHeader color='dark'>
-                <h1 className='ion-text-center'>Episodes</h1>
-              </IonListHeader>
-              {episodes &&
-                episodes.map((epi, idx) => (
-                  <IonItem color='dark' key={idx}>
-                    <IonAvatar slot='start'>
-                      <IonImg src={epi.feedImage} />
-                    </IonAvatar>
-                    <IonLabel className='ion-text-wrap'>
-                      <h1>{epi.title}</h1>
-                      <h3>{epi.description}</h3>
-                      <p>{epi.datePublishedPretty}</p>
-                    </IonLabel>
-                    <IonIcon
-                      slot='end'
-                      button
-                      icon={playOutline}
-                      onClick={() => buttonHandler(idx)}
-                    />
-                  </IonItem>
-                ))}
-            </IonList>
+            <IonCol sizeSm='10' offsetSm='1'>
+              <IonList className='ion-no-padding'>
+                <IonListHeader color='dark'>
+                  <h1 className='ion-text-center'>Episodes</h1>
+                </IonListHeader>
+                {episodes &&
+                  episodes.map((epi, idx) => (
+                    <IonItem color='dark' key={idx}>
+                      <IonAvatar slot='start'>
+                        <IonImg src={epi.feedImage} />
+                      </IonAvatar>
+                      <IonLabel className='ion-text-wrap'>
+                        <h1>{epi.title}</h1>
+                        <h3>{epi.description}</h3>
+                        <p>{epi.datePublishedPretty}</p>
+                      </IonLabel>
+                      <IonIcon
+                        slot='end'
+                        button
+                        icon={playOutline}
+                        onClick={() => buttonHandler(idx)}
+                      />
+                    </IonItem>
+                  ))}
+              </IonList>
+            </IonCol>
           </IonRow>
         </IonGrid>
       </IonContent>
