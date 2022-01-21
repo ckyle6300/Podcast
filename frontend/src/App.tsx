@@ -1,8 +1,14 @@
-import { IonApp, IonRouterOutlet, IonSplitPane, setupIonicReact } from '@ionic/react';
+import {
+  IonApp,
+  IonRouterOutlet,
+  IonSplitPane,
+  setupIonicReact,
+} from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route } from 'react-router-dom';
 import Menu from './components/Menu';
 import Page from './pages/Page';
+import Search from './pages/Search';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -29,14 +35,20 @@ const App: React.FC = () => {
   return (
     <IonApp>
       <IonReactRouter>
-        <IonSplitPane contentId="main">
+        <IonSplitPane contentId='main'>
           <Menu />
-          <IonRouterOutlet id="main">
-            <Route path="/" exact={true}>
-              <Redirect to="/page/Inbox" />
+          <IonRouterOutlet id='main'>
+            <Route path='/' exact={true}>
+              <Redirect to='/page/Inbox' />
             </Route>
-            <Route path="/page/:name" exact={true}>
+            <Route path='/podcasts/search' exact>
+              <Search />
+            </Route>
+            <Route path='/page/:name' exact={true}>
               <Page />
+            </Route>
+            <Route>
+              <h1>404</h1>
             </Route>
           </IonRouterOutlet>
         </IonSplitPane>
