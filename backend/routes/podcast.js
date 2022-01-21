@@ -19,7 +19,8 @@ router.post('/search', async (req, res) => {
 router.get('/:podcastId', async (req, res) => {
   const podcastId = req.params.podcastId;
   const podcast = await client.podcastById(podcastId);
-  res.json(podcast);
+  const episodes = await client.episodesByFeedId(podcastId, { max: 1000 });
+  res.json({ podcast, episodes });
 });
 
 module.exports = router;

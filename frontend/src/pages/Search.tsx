@@ -1,5 +1,6 @@
 import {
   IonCard,
+  IonCardHeader,
   IonCardTitle,
   IonCol,
   IonContent,
@@ -83,7 +84,9 @@ const Search: React.FC = () => {
                   color='dark'
                 >
                   <img src={podcast.artwork} />
-                  <IonCardTitle>{podcast.title}</IonCardTitle>
+                  <IonCardHeader className='ion-no-padding'>
+                    <IonCardTitle>{podcast.title}</IonCardTitle>
+                  </IonCardHeader>
                 </IonCard>
               </IonCol>
             ))}
