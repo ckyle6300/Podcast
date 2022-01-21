@@ -12,8 +12,13 @@ const client = new PodcastIndexClient({
 
 router.post('/search', async (req, res) => {
   const { search } = req.body;
-  console.log('hello');
   const podcast = await client.search(search);
+  res.json(podcast);
+});
+
+router.get('/:podcastId', async (req, res) => {
+  const podcastId = req.params.podcastId;
+  const podcast = await client.podcastById(podcastId);
   res.json(podcast);
 });
 

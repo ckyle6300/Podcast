@@ -19,15 +19,25 @@ import { IPod } from './Search';
 
 const PodcastInfo: React.FC = () => {
   const { podcastId }: { podcastId: string } = useParams();
-  const [podcasts, setPodcasts] = useState<IPod[]>([]);
+  const [podcast, setPodcast] = useState<IPod>();
 
   console.log(podcastId);
+
+  useEffect(() => {
+    const getPodcastInfo = async () => {
+      const req = await fetch(`http://localhost:5100/podcast/${podcastId}`);
+      const podcatInfo = await req.json();
+      console.log(podcatInfo);
+      setPodcast(podcatInfo.feed);
+    };
+    getPodcastInfo();
+  }, []);
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar color='primary' className='ion-text-center'>
-          <IonTitle>Podcast Info</IonTitle>
+          <IonTitle>{podcast ? podcast.title : ''}</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent color='secondary'>
