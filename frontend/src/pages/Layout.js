@@ -11,21 +11,9 @@ const Layout = (props) => {
   const podInfo = useSelector((state) => state.podcastInfo);
   const { episode, podcast, count, chapters } = podInfo;
   const [player, setPlayer] = useState();
+  const [chpt, setChpt] = useState();
 
   useEffect(async () => {
-    const chp = [];
-
-    for (let i = 0; i < chapters.length; i++) {
-      console.log(chapters[i]);
-      if (i === chapters.length - 1) {
-        chp.push({ ...chapters[i], endTime: episode.duration });
-        continue;
-      }
-      const current = chapters[i];
-      const next = chapters[i + 1];
-      chp.push({ ...current, endTime: next.startTime });
-    }
-
     if (count === 10) {
       try {
         const TAudio = {
@@ -34,7 +22,13 @@ const Layout = (props) => {
           title: episode.title,
           artist: podcast.title,
           duration: episode.duration,
-          chapters: chp,
+          chapters: chapters.map((chap, i) => {
+            if (i === chapters.length - 1) {
+              return { ...chap, endTime: episode.duration };
+            }
+
+            return { ...chap, endTime: chapters[i + 1].startTime };
+          }),
         };
         await player.update(TAudio);
       } catch (err) {
@@ -55,7 +49,13 @@ const Layout = (props) => {
               title: episode.title,
               artist: podcast.title,
               duration: episode.duration,
-              chapters: chp,
+              chapters: chapters.map((chap, i) => {
+                if (i === chapters.length - 1) {
+                  return { ...chap, endTime: episode.duration };
+                }
+
+                return { ...chap, endTime: chapters[i + 1].startTime };
+              }),
             },
             theme: 'dark',
             speedOptions: [0.75, 1, 1.25, 1.5, 1.75, 2, 2.25],

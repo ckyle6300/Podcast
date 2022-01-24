@@ -18,7 +18,7 @@ const podcastSlice = createSlice({
     updatePodcast(state, action) {
       state.podcast = action.payload.pod;
       state.episode = action.payload.epi;
-      state.chp = action.payload.chapters;
+      state.chapters = action.payload.chapters;
       state.count = 10;
     },
   },
