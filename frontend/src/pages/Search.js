@@ -1,8 +1,5 @@
 import {
   IonButtons,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
   IonCol,
   IonContent,
   IonGrid,
@@ -18,16 +15,13 @@ import {
 } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import { searchActions } from '../store/searchSlice';
-import { useHistory } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
+import Card from '../components/Card';
 
 const Search = () => {
   const inputSearch = useSelector((state) => state.search);
   const [userSearch, setUserSearch] = useState(inputSearch.inpSearch);
-  const history = useHistory();
   const dispatch = useDispatch();
-
-  console.log(inputSearch);
 
   useEffect(() => {
     const getUrl = async () => {
@@ -81,16 +75,11 @@ const Search = () => {
           <IonRow>
             {inputSearch.podResults.map((podcast, index) => (
               <IonCol size='6' sizeSm='4' key={index}>
-                <IonCard
-                  className='ion-text-center'
-                  onClick={() => history.push(`/podcasts/${podcast.id}`)}
-                  color='dark'
-                >
-                  <img src={podcast.artwork} />
-                  <IonCardHeader className='ion-no-padding'>
-                    <IonCardTitle>{podcast.title}</IonCardTitle>
-                  </IonCardHeader>
-                </IonCard>
+                <Card
+                  podcast={podcast}
+                  clicker={true}
+                  address={`/podcasts/${podcast.id}`}
+                />
               </IonCol>
             ))}
           </IonRow>

@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { IonContent, IonFooter, IonPage } from '@ionic/react';
+import { IonFooter } from '@ionic/react';
 import 'shikwasa/dist/shikwasa.min.css';
 import Shikwasa from 'shikwasa';
 import Chapter from 'shikwasa/dist/shikwasa.chapter.cjs';
@@ -10,9 +10,7 @@ import { useEffect, useRef, useState } from 'react';
 const Layout = (props) => {
   const podInfo = useSelector((state) => state.podcastInfo);
   const { episode, chp, podcast, count } = podInfo;
-  const [player, setPlayer] = useState(false);
-  const playerRef = useRef();
-  console.log(player);
+  const [player, setPlayer] = useState();
 
   useEffect(() => {
     if (count === 10) {
@@ -48,12 +46,7 @@ const Layout = (props) => {
         })
       );
     }
-
-    console.log('first useeffect ', playerRef.current);
   }, [episode]);
-
-  console.log(podInfo);
-  console.log(playerRef);
 
   return <IonFooter id='players' />;
 };

@@ -31,6 +31,7 @@ import { addCircle, addCircleOutline, playOutline } from 'ionicons/icons';
 import { useDispatch } from 'react-redux';
 import { playEpisode } from '../store/podcastInfoSlice';
 import { useSelector } from 'react-redux';
+import Card from '../components/Card';
 
 function parseSecondsIntoReadableTime(milliseconds) {
   //Get hours from seconds
@@ -114,13 +115,7 @@ const PodcastInfo = () => {
         <IonGrid>
           <IonRow>
             <IonCol className='ion-no-padding' sizeSm='6' offsetSm='3'>
-              <IonCard color='dark'>
-                <img src={podcast?.artwork} />
-                <IonCardHeader>
-                  <IonCardTitle>{podcast?.title}</IonCardTitle>
-                  <IonCardSubtitle>{podcast?.description}</IonCardSubtitle>
-                </IonCardHeader>
-              </IonCard>
+              {podcast && <Card podcast={podcast} />}
             </IonCol>
           </IonRow>
 
@@ -137,8 +132,8 @@ const PodcastInfo = () => {
                         <IonImg src={epi.feedImage} />
                       </IonAvatar>
                       <IonLabel className='ion-text-wrap'>
-                        <h1>{epi.title}</h1>
-                        <h2>{epi.datePublishedPretty}</h2>
+                        <h2>{epi.title}</h2>
+                        <h3>{epi.datePublishedPretty}</h3>
                         {epi.duration > 0 && (
                           <p>{parseSecondsIntoReadableTime(epi.duration)}</p>
                         )}
