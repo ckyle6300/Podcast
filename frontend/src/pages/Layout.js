@@ -1,11 +1,11 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { IonFooter } from '@ionic/react';
 import 'shikwasa/dist/shikwasa.min.css';
 import Shikwasa from 'shikwasa';
 import Chapter from 'shikwasa/dist/shikwasa.chapter.cjs';
 import 'shikwasa/dist/shikwasa.chapter.css';
 import { useSelector } from 'react-redux';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const Layout = (props) => {
   const podInfo = useSelector((state) => state.podcastInfo);
@@ -17,7 +17,7 @@ const Layout = (props) => {
       try {
         const TAudio = {
           src: episode.enclosureUrl,
-          cover: episode.image,
+          cover: episode.feedImage,
           title: episode.title,
           artist: podcast.title,
           duration: episode.duration,
@@ -35,7 +35,7 @@ const Layout = (props) => {
           container: document.getElementById('players'),
           audio: {
             src: episode.enclosureUrl,
-            cover: episode.image,
+            cover: episode.feedImage,
             title: episode.title,
             artist: podcast.title,
             duration: episode.duration,

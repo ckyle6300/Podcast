@@ -31,7 +31,7 @@ const Search = () => {
         body: JSON.stringify({ search: userSearch }),
       });
       const parsedData = await data.json();
-
+      console.log('going');
       dispatch(searchActions.updateSearch({ value: userSearch }));
       dispatch(searchActions.updatePodcasts({ pods: parsedData.feeds }));
     };
@@ -39,11 +39,11 @@ const Search = () => {
     let searchTimer;
 
     if (userSearch.length >= 3) {
-      searchTimer = setTimeout(getUrl, 500);
+      searchTimer = setTimeout(getUrl, 700);
     }
 
     return () => clearTimeout(searchTimer);
-  }, [userSearch]);
+  }, [userSearch, dispatch]);
 
   return (
     <IonPage>

@@ -3,6 +3,7 @@ import {
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
+  IonImg,
 } from '@ionic/react';
 import { useHistory } from 'react-router';
 
@@ -12,7 +13,7 @@ const Card = ({ podcast, clicker, address }) => {
   if (!clicker) {
     return (
       <IonCard color='dark' className='ion-text-center'>
-        <img src={podcast?.artwork} />
+        <IonImg src={podcast?.artwork} alt={`${podcast.title}`} />
         <IonCardHeader>
           <IonCardTitle>{podcast?.title}</IonCardTitle>
           {podcast.description && (
@@ -29,7 +30,7 @@ const Card = ({ podcast, clicker, address }) => {
       className='ion-text-center'
       onClick={() => history.push(address)}
     >
-      <img src={podcast?.artwork} />
+      <img src={podcast?.artwork} alt={`${podcast.title}`} />
       <IonCardHeader>
         <IonCardTitle>{podcast?.title}</IonCardTitle>
       </IonCardHeader>

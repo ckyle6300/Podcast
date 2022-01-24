@@ -1,20 +1,11 @@
 import {
-  IonAvatar,
   IonBackButton,
-  IonButton,
   IonButtons,
-  IonCard,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
   IonCol,
   IonContent,
   IonGrid,
   IonHeader,
   IonIcon,
-  IonImg,
-  IonItem,
-  IonLabel,
   IonList,
   IonListHeader,
   IonMenuButton,
@@ -25,32 +16,12 @@ import {
 } from '@ionic/react';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import 'shikwasa/dist/shikwasa.min.css';
-import 'shikwasa/dist/shikwasa.chapter.css';
-import { addCircle, addCircleOutline, playOutline } from 'ionicons/icons';
+import { addCircleOutline } from 'ionicons/icons';
 import { useDispatch } from 'react-redux';
 import { playEpisode } from '../store/podcastInfoSlice';
 import { useSelector } from 'react-redux';
 import Card from '../components/Card';
-
-function parseSecondsIntoReadableTime(milliseconds) {
-  //Get hours from seconds
-  const hours = milliseconds / (60 * 60);
-  const absoluteHours = Math.floor(hours);
-  const h = absoluteHours > 9 ? absoluteHours : '0' + absoluteHours;
-
-  //Get remainder from hours and convert to minutes
-  const minutes = (hours - absoluteHours) * 60;
-  const absoluteMinutes = Math.floor(minutes);
-  const m = absoluteMinutes > 9 ? absoluteMinutes : '0' + absoluteMinutes;
-
-  //Get remainder from minutes and convert to seconds
-  const seconds = (minutes - absoluteMinutes) * 60;
-  const absoluteSeconds = Math.floor(seconds);
-  const s = absoluteSeconds > 9 ? absoluteSeconds : '0' + absoluteSeconds;
-
-  return h + ':' + m + ':' + s;
-}
+import Episodes from '../components/Episodes';
 
 const PodcastInfo = () => {
   const { podcastId } = useParams();
@@ -69,7 +40,7 @@ const PodcastInfo = () => {
       setEpisodes(podcastInfo.episodes.items);
     };
     getPodcastInfo();
-  }, []);
+  }, [podcastId]);
 
   const buttonHandler = async (idx) => {
     const episode = episodes[idx];
@@ -127,24 +98,12 @@ const PodcastInfo = () => {
                 </IonListHeader>
                 {episodes &&
                   episodes.map((epi, idx) => (
-                    <IonItem color='dark' key={idx}>
-                      <IonAvatar slot='start'>
-                        <IonImg src={epi.feedImage} />
-                      </IonAvatar>
-                      <IonLabel className='ion-text-wrap'>
-                        <h2>{epi.title}</h2>
-                        <h3>{epi.datePublishedPretty}</h3>
-                        {epi.duration > 0 && (
-                          <p>{parseSecondsIntoReadableTime(epi.duration)}</p>
-                        )}
-                      </IonLabel>
-                      <IonIcon
-                        slot='end'
-                        button
-                        icon={playOutline}
-                        onClick={() => buttonHandler(idx)}
-                      />
-                    </IonItem>
+                    <Episodes
+                      key={idx}
+                      epi={epi}
+                      buttonHandler={buttonHandler}
+                      idx={idx}
+                    />
                   ))}
               </IonList>
             </IonCol>
