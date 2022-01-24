@@ -1,7 +1,5 @@
 import {
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
+  IonButtons,
   IonCol,
   IonContent,
   IonGrid,
@@ -9,16 +7,21 @@ import {
   IonInput,
   IonItem,
   IonLabel,
+  IonMenuButton,
   IonPage,
   IonRow,
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { searchActions } from '../store/searchSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import Card from '../components/Card';
 
 const Search = () => {
-  const [userSearch, setUserSearch] = useState('');
-  const [podcasts, setPodcasts] = useState([]);
+  const inputSearch = useSelector((state) => state.search);
+  const [userSearch, setUserSearch] = useState(inputSearch.inpSearch);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const getUrl = async () => {
@@ -28,22 +31,27 @@ const Search = () => {
         body: JSON.stringify({ search: userSearch }),
       });
       const parsedData = await data.json();
-      setPodcasts(parsedData.feeds);
+      console.log('going');
+      dispatch(searchActions.updateSearch({ value: userSearch }));
+      dispatch(searchActions.updatePodcasts({ pods: parsedData.feeds }));
     };
 
     let searchTimer;
 
     if (userSearch.length >= 3) {
-      searchTimer = setTimeout(getUrl, 1500);
+      searchTimer = setTimeout(getUrl, 700);
     }
 
     return () => clearTimeout(searchTimer);
-  }, [userSearch]);
+  }, [userSearch, dispatch]);
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar color='primary' className='ion-text-center'>
+          <IonButtons slot='start'>
+            <IonMenuButton />
+          </IonButtons>
           <IonTitle>Search Podcasts</IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -65,18 +73,13 @@ const Search = () => {
             </IonCol>
           </IonRow>
           <IonRow>
-            {podcasts.map((podcast, index) => (
+            {inputSearch.podResults.map((podcast, index) => (
               <IonCol size='6' sizeSm='4' key={index}>
-                <IonCard
-                  className='ion-text-center'
-                  href={`podcasts/${podcast.id}`}
-                  color='dark'
-                >
-                  <img src={podcast.artwork} />
-                  <IonCardHeader className='ion-no-padding'>
-                    <IonCardTitle>{podcast.title}</IonCardTitle>
-                  </IonCardHeader>
-                </IonCard>
+                <Card
+                  podcast={podcast}
+                  clicker={true}
+                  address={`/podcasts/${podcast.id}`}
+                />
               </IonCol>
             ))}
           </IonRow>
@@ -86,4 +89,4 @@ const Search = () => {
   );
 };
 
-export default Search;
+export default React.memo(Search);
