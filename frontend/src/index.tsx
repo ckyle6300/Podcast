@@ -3,13 +3,15 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
-import Layout from './pages/Layout';
+import { Provider } from 'react-redux';
+
+import store from './store/index';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Layout>
+    <Provider store={store}>
       <App />
-    </Layout>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

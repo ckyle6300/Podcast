@@ -1,5 +1,6 @@
 import {
   IonApp,
+  IonContent,
   IonRouterOutlet,
   IonSplitPane,
   setupIonicReact,
@@ -29,6 +30,8 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 import PodcastInfo from './pages/PodcastInfo';
+import React from 'react';
+import Layout from './pages/Layout';
 
 setupIonicReact();
 
@@ -36,6 +39,8 @@ const App: React.FC = () => {
   return (
     <IonApp>
       <IonReactRouter>
+        <IonContent></IonContent>
+        <Layout />
         <IonSplitPane contentId='main'>
           <Menu />
           <IonRouterOutlet id='main'>

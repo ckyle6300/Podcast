@@ -15,10 +15,13 @@ import {
   IonToolbar,
 } from '@ionic/react';
 import React, { ChangeEvent, useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
+import Layout from './Layout';
 
 const Search = () => {
   const [userSearch, setUserSearch] = useState('');
   const [podcasts, setPodcasts] = useState([]);
+  const history = useHistory();
 
   useEffect(() => {
     const getUrl = async () => {
@@ -39,6 +42,8 @@ const Search = () => {
 
     return () => clearTimeout(searchTimer);
   }, [userSearch]);
+
+  console.log('going again');
 
   return (
     <IonPage>
@@ -69,7 +74,7 @@ const Search = () => {
               <IonCol size='6' sizeSm='4' key={index}>
                 <IonCard
                   className='ion-text-center'
-                  href={`podcasts/${podcast.id}`}
+                  onClick={() => history.push(`/podcasts/${podcast.id}`)}
                   color='dark'
                 >
                   <img src={podcast.artwork} />

@@ -28,77 +28,98 @@ import 'shikwasa/dist/shikwasa.min.css';
 import Shikwasa from 'shikwasa';
 import Chapter from 'shikwasa/dist/shikwasa.chapter.cjs';
 import 'shikwasa/dist/shikwasa.chapter.css';
-import { playOutline } from 'ionicons/icons';
+import { play, playOutline } from 'ionicons/icons';
+import { useDispatch } from 'react-redux';
+import { playEpisode } from '../store';
+import { useSelector } from 'react-redux';
+import Layout from './Layout';
 
 const PodcastInfo = () => {
   const { podcastId } = useParams();
   const [podcast, setPodcast] = useState();
   const [episodes, setEpisodes] = useState([]);
+  const podInfo = useSelector((state) => state.podcastInfo);
 
-  console.log(podcastId);
-  let player;
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const getPodcastInfo = async () => {
       const req = await fetch(`http://localhost:5100/podcast/${podcastId}`);
       const podcastInfo = await req.json();
-      console.log(podcastInfo);
+
       setPodcast(podcastInfo.podcast.feed);
       setEpisodes(podcastInfo.episodes.items);
     };
     getPodcastInfo();
   }, []);
 
-  let podInfo;
-
   const buttonHandler = async (idx) => {
-    if (podInfo != episodes[idx] && podInfo !== undefined) {
-      console.log('inside the if');
-      podInfo = episodes[idx];
-      const data = await fetch('http://localhost:5100/podcast/chapters', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chapterUrl: podInfo.chaptersUrl }),
-      });
+    const episode = episodes[idx];
 
-      const chp = await data.json();
-      const TAudio = {
-        src: podInfo.enclosureUrl,
-        cover: podInfo.image,
-        title: podInfo.title,
-        artist: podcast.author,
-        duration: podInfo.duration,
-        chapters: chp,
-      };
-      player.update(TAudio);
-      return;
-    }
-
-    console.log('not in if');
-    podInfo = episodes[idx];
     const data = await fetch('http://localhost:5100/podcast/chapters', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chapterUrl: podInfo.chaptersUrl }),
+      body: JSON.stringify({ chapterUrl: episode.chaptersUrl }),
     });
 
     const chp = await data.json();
-    console.log(chp);
 
-    Shikwasa.use(Chapter);
-    player = new Shikwasa({
-      container: () => document.getElementById('players'),
-      audio: {
-        title: podInfo.title,
-        artist: podcast.author,
-        cover: podInfo.image,
-        src: podInfo.enclosureUrl,
-        chapters: chp,
-      },
-      theme: 'dark',
-      speedOptions: [0.75, 1, 1.25, 1.5, 1.75, 2, 2.25],
-      autoplay: true,
-    });
+    if (podInfo.count === 0) {
+      dispatch(
+        playEpisode.newPodcast({ pod: podcast, epi: episode, chapters: chp })
+      );
+    } else {
+      dispatch(
+        playEpisode.updatePodcast({ pod: podcast, epi: episode, chapters: chp })
+      );
+    }
+    // if (podInfo != episodes[idx] && podInfo !== undefined) {
+    //   console.log('inside the if');
+    //   podInfo = episodes[idx];
+    //   const data = await fetch('http://localhost:5100/podcast/chapters', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({ chapterUrl: podInfo.chaptersUrl }),
+    //   });
+
+    //   const chp = await data.json();
+    //   const TAudio = {
+    //     src: podInfo.enclosureUrl,
+    //     cover: podInfo.image,
+    //     title: podInfo.title,
+    //     artist: podcast.author,
+    //     duration: podInfo.duration,
+    //     chapters: chp,
+    //   };
+    //   player.update(TAudio);
+    //   return;
+    // }
+
+    // console.log('not in if');
+    // podInfo = episodes[idx];
+    // const data = await fetch('http://localhost:5100/podcast/chapters', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ chapterUrl: podInfo.chaptersUrl }),
+    // });
+
+    // const chp = await data.json();
+    // console.log(chp);
+
+    // Shikwasa.use(Chapter);
+    // player = new Shikwasa({
+    //   container: () => document.getElementById('players'),
+    //   audio: {
+    //     title: podInfo.title,
+    //     artist: podcast.author,
+    //     cover: podInfo.image,
+    //     src: podInfo.enclosureUrl,
+    //     chapters: chp,
+    //   },
+    //   theme: 'dark',
+    //   speedOptions: [0.75, 1, 1.25, 1.5, 1.75, 2, 2.25],
+    //   autoplay: true,
+    // });
   };
 
   return (
@@ -155,7 +176,6 @@ const PodcastInfo = () => {
           </IonRow>
         </IonGrid>
       </IonContent>
-      <IonFooter id='players'></IonFooter>
     </IonPage>
   );
 };
