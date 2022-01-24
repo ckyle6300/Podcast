@@ -1,6 +1,7 @@
 import {
   IonAvatar,
   IonBackButton,
+  IonButton,
   IonButtons,
   IonCard,
   IonCardHeader,
@@ -8,7 +9,6 @@ import {
   IonCardTitle,
   IonCol,
   IonContent,
-  IonFooter,
   IonGrid,
   IonHeader,
   IonIcon,
@@ -23,17 +23,33 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import 'shikwasa/dist/shikwasa.min.css';
-import Shikwasa from 'shikwasa';
-import Chapter from 'shikwasa/dist/shikwasa.chapter.cjs';
 import 'shikwasa/dist/shikwasa.chapter.css';
-import { play, playOutline } from 'ionicons/icons';
+import { addCircle, addCircleOutline, playOutline } from 'ionicons/icons';
 import { useDispatch } from 'react-redux';
-import { playEpisode } from '../store';
+import { playEpisode } from '../store/podcastInfoSlice';
 import { useSelector } from 'react-redux';
-import Layout from './Layout';
+
+function parseSecondsIntoReadableTime(milliseconds) {
+  //Get hours from seconds
+  const hours = milliseconds / (60 * 60);
+  const absoluteHours = Math.floor(hours);
+  const h = absoluteHours > 9 ? absoluteHours : '0' + absoluteHours;
+
+  //Get remainder from hours and convert to minutes
+  const minutes = (hours - absoluteHours) * 60;
+  const absoluteMinutes = Math.floor(minutes);
+  const m = absoluteMinutes > 9 ? absoluteMinutes : '0' + absoluteMinutes;
+
+  //Get remainder from minutes and convert to seconds
+  const seconds = (minutes - absoluteMinutes) * 60;
+  const absoluteSeconds = Math.floor(seconds);
+  const s = absoluteSeconds > 9 ? absoluteSeconds : '0' + absoluteSeconds;
+
+  return h + ':' + m + ':' + s;
+}
 
 const PodcastInfo = () => {
   const { podcastId } = useParams();
@@ -74,53 +90,6 @@ const PodcastInfo = () => {
         playEpisode.updatePodcast({ pod: podcast, epi: episode, chapters: chp })
       );
     }
-    // if (podInfo != episodes[idx] && podInfo !== undefined) {
-    //   console.log('inside the if');
-    //   podInfo = episodes[idx];
-    //   const data = await fetch('http://localhost:5100/podcast/chapters', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({ chapterUrl: podInfo.chaptersUrl }),
-    //   });
-
-    //   const chp = await data.json();
-    //   const TAudio = {
-    //     src: podInfo.enclosureUrl,
-    //     cover: podInfo.image,
-    //     title: podInfo.title,
-    //     artist: podcast.author,
-    //     duration: podInfo.duration,
-    //     chapters: chp,
-    //   };
-    //   player.update(TAudio);
-    //   return;
-    // }
-
-    // console.log('not in if');
-    // podInfo = episodes[idx];
-    // const data = await fetch('http://localhost:5100/podcast/chapters', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ chapterUrl: podInfo.chaptersUrl }),
-    // });
-
-    // const chp = await data.json();
-    // console.log(chp);
-
-    // Shikwasa.use(Chapter);
-    // player = new Shikwasa({
-    //   container: () => document.getElementById('players'),
-    //   audio: {
-    //     title: podInfo.title,
-    //     artist: podcast.author,
-    //     cover: podInfo.image,
-    //     src: podInfo.enclosureUrl,
-    //     chapters: chp,
-    //   },
-    //   theme: 'dark',
-    //   speedOptions: [0.75, 1, 1.25, 1.5, 1.75, 2, 2.25],
-    //   autoplay: true,
-    // });
   };
 
   return (
@@ -130,6 +99,13 @@ const PodcastInfo = () => {
           <IonButtons slot='start'>
             <IonMenuButton />
             <IonBackButton defaultHref='search' />
+          </IonButtons>
+          <IonButtons slot='end'>
+            <IonIcon
+              icon={addCircleOutline}
+              size='large'
+              style={{ marginRight: '1rem' }}
+            />
           </IonButtons>
           <IonTitle>{podcast ? podcast.title : ''}</IonTitle>
         </IonToolbar>
@@ -162,8 +138,10 @@ const PodcastInfo = () => {
                       </IonAvatar>
                       <IonLabel className='ion-text-wrap'>
                         <h1>{epi.title}</h1>
-                        <h3>{epi.description}</h3>
-                        <p>{epi.datePublishedPretty}</p>
+                        <h2>{epi.datePublishedPretty}</h2>
+                        {epi.duration > 0 && (
+                          <p>{parseSecondsIntoReadableTime(epi.duration)}</p>
+                        )}
                       </IonLabel>
                       <IonIcon
                         slot='end'

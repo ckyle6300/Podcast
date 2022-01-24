@@ -1,33 +1,9 @@
-import { createSlice, configureStore } from '@reduxjs/toolkit';
-
-const podcastSlice = createSlice({
-  name: 'podcast',
-  initialState: {
-    podcast: undefined,
-    episode: undefined,
-    chapters: undefined,
-    count: 0,
-  },
-  reducers: {
-    newPodcast(state, action) {
-      console.log(action);
-      state.podcast = action.payload.pod;
-      state.episode = action.payload.epi;
-      state.chapters = action.payload.chapters;
-      state.count = 5;
-    },
-    updatePodcast(state, action) {
-      state.podcast = action.payload.pod;
-      state.episode = action.payload.epi;
-      state.chp = action.payload.chapters;
-      state.count = 10;
-    },
-  },
-});
+import { configureStore } from '@reduxjs/toolkit';
+import podcastSlice from './podcastInfoSlice';
+import searchSlice from './searchSlice';
 
 const store = configureStore({
-  reducer: { podcastInfo: podcastSlice.reducer },
+  reducer: { podcastInfo: podcastSlice.reducer, search: searchSlice.reducer },
 });
 
-export const playEpisode = podcastSlice.actions;
 export default store;

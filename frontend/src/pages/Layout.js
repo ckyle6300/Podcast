@@ -55,37 +55,6 @@ const Layout = (props) => {
   console.log(podInfo);
   console.log(playerRef);
 
-  // useEffect(() => {
-  //   const TAudio = {
-  //     src: episode.enclosureUrl,
-  //     cover: episode.image,
-  //     title: episode.title,
-  //     artist: podcast.title,
-  //     duration: episode.duration,
-  //     chapters: chp,
-  //   };
-  //   playerRef.current.update(TAudio);
-  // }, [episode]);
-
-  console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy');
-
-  // console.log(chp, '777777777777777777');
-  // useEffect(() => {
-  //   if (count == 10) {
-  //     const TAudio = {
-  //       src: episode.enclosureUrl,
-  //       cover: episode.image,
-  //       title: episode.title,
-  //       artist: podcast.title,
-  //       duration: episode.duration,
-  //       chapters: chp,
-  //     };
-  //     playerRef.current.update(TAudio);
-  //   }
-  // }, [episode, chp, podcast, count]);
-
-  // console.log(count, 'hello');
-
   return <IonFooter id='players' />;
 };
 export default React.memo(Layout);

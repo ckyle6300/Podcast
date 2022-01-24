@@ -16,14 +16,18 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { searchActions } from '../store/searchSlice';
 import { useHistory } from 'react-router';
-import Layout from './Layout';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Search = () => {
-  const [userSearch, setUserSearch] = useState('');
-  const [podcasts, setPodcasts] = useState([]);
+  const inputSearch = useSelector((state) => state.search);
+  const [userSearch, setUserSearch] = useState(inputSearch.inpSearch);
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  console.log(inputSearch);
 
   useEffect(() => {
     const getUrl = async () => {
@@ -33,19 +37,19 @@ const Search = () => {
         body: JSON.stringify({ search: userSearch }),
       });
       const parsedData = await data.json();
-      setPodcasts(parsedData.feeds);
+
+      dispatch(searchActions.updateSearch({ value: userSearch }));
+      dispatch(searchActions.updatePodcasts({ pods: parsedData.feeds }));
     };
 
     let searchTimer;
 
     if (userSearch.length >= 3) {
-      searchTimer = setTimeout(getUrl, 1500);
+      searchTimer = setTimeout(getUrl, 500);
     }
 
     return () => clearTimeout(searchTimer);
   }, [userSearch]);
-
-  console.log('going again');
 
   return (
     <IonPage>
@@ -75,7 +79,7 @@ const Search = () => {
             </IonCol>
           </IonRow>
           <IonRow>
-            {podcasts.map((podcast, index) => (
+            {inputSearch.podResults.map((podcast, index) => (
               <IonCol size='6' sizeSm='4' key={index}>
                 <IonCard
                   className='ion-text-center'
@@ -96,4 +100,4 @@ const Search = () => {
   );
 };
 
-export default Search;
+export default React.memo(Search);
