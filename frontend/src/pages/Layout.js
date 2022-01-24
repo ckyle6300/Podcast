@@ -10,29 +10,52 @@ import { useEffect, useRef, useState } from 'react';
 const Layout = (props) => {
   const podInfo = useSelector((state) => state.podcastInfo);
   const { episode, chp, podcast, count } = podInfo;
-  const [anotherEpisode, setAnotherEpisode] = useState(false);
+  const [player, setPlayer] = useState(false);
   const playerRef = useRef();
+  console.log(player);
 
   useEffect(() => {
-    console.log('hello');
-    Shikwasa.use(Chapter);
-    let player = new Shikwasa({
-      container: document.getElementById('players'),
-      audio: {
-        src: '',
-        cover: '',
-        title: '',
-        artist: '',
-        duration: '',
-        chapters: '',
-      },
-      theme: 'dark',
-      speedOptions: [0.75, 1, 1.25, 1.5, 1.75, 2, 2.25],
-      autoplay: true,
-    });
-  }, []);
+    if (count === 10) {
+      try {
+        const TAudio = {
+          src: episode.enclosureUrl,
+          cover: episode.image,
+          title: episode.title,
+          artist: podcast.title,
+          duration: episode.duration,
+        };
+        player.update(TAudio);
+      } catch (err) {
+        console.log(err);
+      }
+      return;
+    }
 
-  // function update(player) {
+    if (count === 5) {
+      setPlayer(
+        new Shikwasa({
+          container: document.getElementById('players'),
+          audio: {
+            src: episode.enclosureUrl,
+            cover: episode.image,
+            title: episode.title,
+            artist: podcast.title,
+            duration: episode.duration,
+          },
+          theme: 'dark',
+          speedOptions: [0.75, 1, 1.25, 1.5, 1.75, 2, 2.25],
+          autoplay: true,
+        })
+      );
+    }
+
+    console.log('first useeffect ', playerRef.current);
+  }, [episode]);
+
+  console.log(podInfo);
+  console.log(playerRef);
+
+  // useEffect(() => {
   //   const TAudio = {
   //     src: episode.enclosureUrl,
   //     cover: episode.image,
@@ -42,7 +65,7 @@ const Layout = (props) => {
   //     chapters: chp,
   //   };
   //   playerRef.current.update(TAudio);
-  // }
+  // }, [episode]);
 
   console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy');
 

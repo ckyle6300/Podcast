@@ -1,4 +1,5 @@
 import {
+  IonButtons,
   IonCard,
   IonCardHeader,
   IonCardTitle,
@@ -9,6 +10,7 @@ import {
   IonInput,
   IonItem,
   IonLabel,
+  IonMenuButton,
   IonPage,
   IonRow,
   IonTitle,
@@ -49,6 +51,9 @@ const Search = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar color='primary' className='ion-text-center'>
+          <IonButtons slot='start'>
+            <IonMenuButton />
+          </IonButtons>
           <IonTitle>Search Podcasts</IonTitle>
         </IonToolbar>
       </IonHeader>

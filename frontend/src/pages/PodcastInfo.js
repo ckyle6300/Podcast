@@ -17,6 +17,7 @@ import {
   IonLabel,
   IonList,
   IonListHeader,
+  IonMenuButton,
   IonPage,
   IonRow,
   IonTitle,
@@ -127,6 +128,7 @@ const PodcastInfo = () => {
       <IonHeader>
         <IonToolbar color='primary' className='ion-text-center'>
           <IonButtons slot='start'>
+            <IonMenuButton />
             <IonBackButton defaultHref='search' />
           </IonButtons>
           <IonTitle>{podcast ? podcast.title : ''}</IonTitle>
