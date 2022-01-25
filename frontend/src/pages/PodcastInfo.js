@@ -16,10 +16,11 @@ import {
 } from '@ionic/react';
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
-import { addCircleOutline } from 'ionicons/icons';
+import { addCircle, addCircleOutline } from 'ionicons/icons';
 import { useDispatch } from 'react-redux';
 import { playEpisode } from '../store/podcastInfoSlice';
 import { useSelector } from 'react-redux';
+import { Storage } from '@capacitor/storage';
 import Card from '../components/Card';
 import Episodes from '../components/Episodes';
 import EpisodeModal from '../components/EpisodeModal';
@@ -29,6 +30,7 @@ const PodcastInfo = () => {
   const [podcast, setPodcast] = useState();
   const [episodes, setEpisodes] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [favorite, setFavorite] = useState(false);
   const podInfo = useSelector((state) => state.podcastInfo);
   const modalRef = useRef();
 
@@ -76,6 +78,29 @@ const PodcastInfo = () => {
     };
   };
 
+  const addPodcast = async () => {
+    const { value } = await Storage.get({ key: 'PodcastList' });
+    let podcastlist = JSON.parse(value);
+
+    let inside = podcastlist.find((pod) => pod.id === podcast.id);
+
+    if (!inside) {
+      let pod;
+      podcastlist.push(podcast);
+      try {
+        pod = await Storage.set({
+          key: `PodcastList`,
+          value: JSON.stringify(podcastlist),
+        });
+      } catch (error) {
+        console.log(error);
+      }
+
+      console.log(podcastlist, 'localStorage');
+      setFavorite(true);
+    }
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -86,9 +111,10 @@ const PodcastInfo = () => {
           </IonButtons>
           <IonButtons slot='end'>
             <IonIcon
-              icon={addCircleOutline}
+              icon={favorite ? addCircle : addCircleOutline}
               size='large'
               style={{ marginRight: '1rem' }}
+              onClick={addPodcast}
             />
           </IonButtons>
           <IonTitle>{podcast ? podcast.title : ''}</IonTitle>

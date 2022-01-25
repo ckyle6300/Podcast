@@ -25,6 +25,7 @@ const EpisodeModal = ({ isOpen, setIsOpen, buttonHandler, modalInfo }) => {
     return <></>;
   }
   const { epi, idx, podTitle } = modalInfo;
+  // use transcript
   // useEffect(async () => {
   //   fetch(epi.transcriptUrl)
   //     .then((response) => response.body)
@@ -67,7 +68,7 @@ const EpisodeModal = ({ isOpen, setIsOpen, buttonHandler, modalInfo }) => {
   //     });
   // }, []);
 
-  console.log(epi);
+  // console.log(epi.description);
 
   return (
     <IonModal isOpen={isOpen}>

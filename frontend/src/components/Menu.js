@@ -1,6 +1,8 @@
 import {
+  IonAvatar,
   IonContent,
   IonIcon,
+  IonImg,
   IonItem,
   IonLabel,
   IonList,
@@ -29,15 +31,17 @@ import {
   warningSharp,
 } from 'ionicons/icons';
 import './Menu.css';
+import { useEffect, useState } from 'react';
+import { Storage } from '@capacitor/storage';
 
-interface AppPage {
-  url: string;
-  iosIcon: string;
-  mdIcon: string;
-  title: string;
-}
+// interface AppPage {
+//   url: string;
+//   iosIcon: string;
+//   mdIcon: string;
+//   title: string;
+// }
 
-const appPages: AppPage[] = [
+const appPages = [
   {
     title: 'Find Podcasts',
     url: '/podcasts/search',
@@ -84,8 +88,21 @@ const appPages: AppPage[] = [
 
 const labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
 
-const Menu: React.FC = () => {
+const Menu = () => {
   const location = useLocation();
+  const [podcastList, setPodcastList] = useState([]);
+
+  useEffect(() => {
+    const getPodcasts = async () => {
+      const { value } = await Storage.get({ key: 'PodcastList' });
+      let podcastlist = await JSON.parse(value);
+      setPodcastList(podcastlist);
+    };
+
+    getPodcasts();
+  }, []);
+
+  console.log(podcastList);
 
   return (
     <IonMenu contentId='main' type='overlay'>
@@ -118,11 +135,25 @@ const Menu: React.FC = () => {
         </IonList>
 
         <IonList id='labels-list'>
-          <IonListHeader>Labels</IonListHeader>
-          {labels.map((label, index) => (
-            <IonItem lines='none' key={index}>
-              <IonIcon slot='start' icon={bookmarkOutline} />
-              <IonLabel>{label}</IonLabel>
+          <IonListHeader>SubScribed Podcasts</IonListHeader>
+          {podcastList.map((podcast, index) => (
+            <IonItem
+              lines='none'
+              key={index}
+              className={
+                location.pathname === `/podcasts/${podcast.id}`
+                  ? 'selected'
+                  : ''
+              }
+              routerLink={`/podcasts/${podcast.id}`}
+              routerDirection='none'
+              lines='none'
+              detail={false}
+            >
+              <IonAvatar slot='start'>
+                <IonImg src={podcast.artwork} />
+              </IonAvatar>
+              <IonLabel>{podcast.title}</IonLabel>
             </IonItem>
           ))}
         </IonList>
