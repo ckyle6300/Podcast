@@ -40,9 +40,7 @@ export function parseSecondsIntoReadableTime(milliseconds) {
   return h + ':' + m + ':' + s;
 }
 
-const Episodes = ({ epi, buttonHandler, idx, podTitle }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
+const Episodes = ({ epi, buttonHandler, idx, clickHandler }) => {
   return (
     <>
       <IonItem color='dark' button={true}>
@@ -51,7 +49,7 @@ const Episodes = ({ epi, buttonHandler, idx, podTitle }) => {
         </IonAvatar>
         <IonLabel
           className='ion-text-wrap'
-          onClick={() => setIsOpen((prev) => !prev)}
+          onClick={() => clickHandler(epi, idx)}
         >
           <h2>{epi.title}</h2>
           <h3>{epi.datePublishedPretty}</h3>
@@ -66,14 +64,6 @@ const Episodes = ({ epi, buttonHandler, idx, podTitle }) => {
           onClick={() => buttonHandler(idx)}
         />
       </IonItem>
-      <EpisodeModal
-        isOpen={isOpen}
-        epi={epi}
-        podTitle={podTitle}
-        setIsOpen={setIsOpen}
-        idx={idx}
-        buttonHandler={buttonHandler}
-      />
     </>
   );
 };

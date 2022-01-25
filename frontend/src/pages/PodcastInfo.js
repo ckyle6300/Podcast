@@ -14,7 +14,7 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
 import { addCircleOutline } from 'ionicons/icons';
 import { useDispatch } from 'react-redux';
@@ -22,12 +22,15 @@ import { playEpisode } from '../store/podcastInfoSlice';
 import { useSelector } from 'react-redux';
 import Card from '../components/Card';
 import Episodes from '../components/Episodes';
+import EpisodeModal from '../components/EpisodeModal';
 
 const PodcastInfo = () => {
   const { podcastId } = useParams();
   const [podcast, setPodcast] = useState();
   const [episodes, setEpisodes] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
   const podInfo = useSelector((state) => state.podcastInfo);
+  const modalRef = useRef();
 
   const dispatch = useDispatch();
 
@@ -62,6 +65,15 @@ const PodcastInfo = () => {
         playEpisode.updatePodcast({ pod: podcast, epi: episode, chapters: chp })
       );
     }
+  };
+
+  const clickHandler = (epi, idx) => {
+    setIsOpen((prev) => !prev);
+    modalRef.current = {
+      epi: epi,
+      idx: idx,
+      podTitle: podcast.title,
+    };
   };
 
   return (
@@ -103,12 +115,18 @@ const PodcastInfo = () => {
                       epi={epi}
                       buttonHandler={buttonHandler}
                       idx={idx}
-                      podTitle={podcast.title}
+                      clickHandler={clickHandler}
                     />
                   ))}
               </IonList>
             </IonCol>
           </IonRow>
+          <EpisodeModal
+            isOpen={isOpen}
+            modalInfo={modalRef.current}
+            setIsOpen={setIsOpen}
+            buttonHandler={buttonHandler}
+          />
         </IonGrid>
       </IonContent>
     </IonPage>

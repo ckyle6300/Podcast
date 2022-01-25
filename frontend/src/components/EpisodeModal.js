@@ -20,14 +20,11 @@ import { closeOutline, playOutline } from 'ionicons/icons';
 import parse from 'html-react-parser';
 import { parseSecondsIntoReadableTime } from './Episodes';
 
-const EpisodeModal = ({
-  isOpen,
-  epi,
-  podTitle,
-  setIsOpen,
-  buttonHandler,
-  idx,
-}) => {
+const EpisodeModal = ({ isOpen, setIsOpen, buttonHandler, modalInfo }) => {
+  if (!modalInfo) {
+    return <></>;
+  }
+  const { epi, idx, podTitle } = modalInfo;
   // useEffect(async () => {
   //   fetch(epi.transcriptUrl)
   //     .then((response) => response.body)
@@ -76,7 +73,7 @@ const EpisodeModal = ({
     <IonModal isOpen={isOpen}>
       <IonHeader>
         <IonToolbar color='primary'>
-          <IonTitle>{epi.title}</IonTitle>
+          <IonTitle>{epi?.title}</IonTitle>
           <IonButtons slot='end'>
             <IonButton
               fill='clear'
@@ -99,10 +96,10 @@ const EpisodeModal = ({
                 </IonAvatar>
                 <IonLabel className='ion-text-wrap'>
                   <p>{podTitle}</p>
-                  <h2>{epi.title}</h2>
-                  <h3>{epi.datePublishedPretty}</h3>
-                  {epi.duration > 0 && (
-                    <p>{parseSecondsIntoReadableTime(epi.duration)}</p>
+                  <h2>{epi?.title}</h2>
+                  <h3>{epi?.datePublishedPretty}</h3>
+                  {epi?.duration > 0 && (
+                    <p>{parseSecondsIntoReadableTime(epi?.duration)}</p>
                   )}
                 </IonLabel>
                 <IonIcon
@@ -115,7 +112,7 @@ const EpisodeModal = ({
             </IonCol>
           </IonRow>
           <IonRow className='ion-padding '>
-            <IonCol>{parse(epi.description)}</IonCol>
+            <IonCol>{parse(epi?.description)}</IonCol>
           </IonRow>
         </IonGrid>
       </IonContent>

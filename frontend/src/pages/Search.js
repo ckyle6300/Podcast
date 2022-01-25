@@ -21,6 +21,7 @@ import Card from '../components/Card';
 const Search = () => {
   const inputSearch = useSelector((state) => state.search);
   const [userSearch, setUserSearch] = useState(inputSearch.inpSearch);
+  const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
