@@ -103,6 +103,7 @@ const PodcastInfo = () => {
                       epi={epi}
                       buttonHandler={buttonHandler}
                       idx={idx}
+                      podTitle={podcast.title}
                     />
                   ))}
               </IonList>
