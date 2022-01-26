@@ -20,7 +20,7 @@ import { addCircle, addCircleOutline } from 'ionicons/icons';
 import { useDispatch } from 'react-redux';
 import { playEpisode } from '../store/podcastInfoSlice';
 import { useSelector } from 'react-redux';
-import { Storage } from '@capacitor/storage';
+import LocStorage from '../utils/storage-model';
 import Card from '../components/Card';
 import Episodes from '../components/Episodes';
 import EpisodeModal from '../components/EpisodeModal';
@@ -41,12 +41,14 @@ const PodcastInfo = () => {
       const req = await fetch(`http://localhost:5100/podcast/${podcastId}`);
       const podcastInfo = await req.json();
 
+      // console.log({...podcastInfo.podcast, }, 'hello');
       setPodcast(podcastInfo.podcast.feed);
       setEpisodes(podcastInfo.episodes.items);
     };
     getPodcastInfo();
   }, [podcastId]);
 
+  console.log(podcast);
   const buttonHandler = async (idx) => {
     const episode = episodes[idx];
 
@@ -79,26 +81,16 @@ const PodcastInfo = () => {
   };
 
   const addPodcast = async () => {
-    const { value } = await Storage.get({ key: 'PodcastList' });
-    let podcastlist = JSON.parse(value);
-
-    let inside = podcastlist.find((pod) => pod.id === podcast.id);
-
-    if (!inside) {
-      let pod;
-      podcastlist.push(podcast);
-      try {
-        pod = await Storage.set({
-          key: `PodcastList`,
-          value: JSON.stringify(podcastlist),
-        });
-      } catch (error) {
-        console.log(error);
-      }
-
-      console.log(podcastlist, 'localStorage');
-      setFavorite(true);
+    let podcastList = await LocStorage.getStorage('PodcastList');
+    console.log(podcastList);
+    if (podcastList == null) {
+      podcastList = {};
     }
+
+    podcastList[podcast.id] = podcast;
+    LocStorage.add('PodcastList', podcastList);
+    console.log(podcastList);
+    setFavorite(true);
   };
 
   return (

@@ -32,14 +32,7 @@ import {
 } from 'ionicons/icons';
 import './Menu.css';
 import { useEffect, useState } from 'react';
-import { Storage } from '@capacitor/storage';
-
-// interface AppPage {
-//   url: string;
-//   iosIcon: string;
-//   mdIcon: string;
-//   title: string;
-// }
+import LocStorage from '../utils/storage-model';
 
 const appPages = [
   {
@@ -48,61 +41,27 @@ const appPages = [
     iosIcon: searchOutline,
     mdIcon: searchSharp,
   },
-  // {
-  //   title: 'Inbox',
-  //   url: '/page/Inbox',
-  //   iosIcon: mailOutline,
-  //   mdIcon: mailSharp,
-  // },
-  // {
-  //   title: 'Outbox',
-  //   url: '/page/Outbox',
-  //   iosIcon: paperPlaneOutline,
-  //   mdIcon: paperPlaneSharp,
-  // },
-  // {
-  //   title: 'Favorites',
-  //   url: '/page/Favorites',
-  //   iosIcon: heartOutline,
-  //   mdIcon: heartSharp,
-  // },
-  // {
-  //   title: 'Archived',
-  //   url: '/page/Archived',
-  //   iosIcon: archiveOutline,
-  //   mdIcon: archiveSharp,
-  // },
-  // {
-  //   title: 'Trash',
-  //   url: '/page/Trash',
-  //   iosIcon: trashOutline,
-  //   mdIcon: trashSharp,
-  // },
-  // {
-  //   title: 'Spam',
-  //   url: '/page/Spam',
-  //   iosIcon: warningOutline,
-  //   mdIcon: warningSharp,
-  // },
+  {
+    title: 'Inbox',
+    url: '/page/Inbox',
+    iosIcon: mailOutline,
+    mdIcon: mailSharp,
+  },
 ];
-
-const labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
 
 const Menu = () => {
   const location = useLocation();
   const [podcastList, setPodcastList] = useState([]);
 
   useEffect(() => {
-    const getPodcasts = async () => {
-      const { value } = await Storage.get({ key: 'PodcastList' });
-      let podcastlist = await JSON.parse(value);
-      setPodcastList(podcastlist);
+    const getPods = async () => {
+      const pods = await LocStorage.getStorage('PodcastList');
+      console.log(pods);
+      setPodcastList(pods);
     };
 
-    getPodcasts();
+    getPods();
   }, []);
-
-  console.log(podcastList);
 
   return (
     <IonMenu contentId='main' type='overlay'>
@@ -135,27 +94,28 @@ const Menu = () => {
         </IonList>
 
         <IonList id='labels-list'>
-          <IonListHeader>SubScribed Podcasts</IonListHeader>
-          {podcastList.map((podcast, index) => (
-            <IonItem
-              lines='none'
-              key={index}
-              className={
-                location.pathname === `/podcasts/${podcast.id}`
-                  ? 'selected'
-                  : ''
-              }
-              routerLink={`/podcasts/${podcast.id}`}
-              routerDirection='none'
-              lines='none'
-              detail={false}
-            >
-              <IonAvatar slot='start'>
-                <IonImg src={podcast.artwork} />
-              </IonAvatar>
-              <IonLabel>{podcast.title}</IonLabel>
-            </IonItem>
-          ))}
+          <IonListHeader>Subscribed Podcasts</IonListHeader>
+          {podcastList &&
+            Object.values(podcastList).map((podcast, index) => (
+              <IonItem
+                lines='none'
+                key={index}
+                className={
+                  location.pathname === `/podcasts/${podcast.id}`
+                    ? 'selected'
+                    : ''
+                }
+                routerLink={`/podcasts/${podcast.id}`}
+                routerDirection='none'
+                lines='none'
+                detail={false}
+              >
+                <IonAvatar slot='start'>
+                  <IonImg src={podcast.artwork} />
+                </IonAvatar>
+                <IonLabel>{podcast.title}</IonLabel>
+              </IonItem>
+            ))}
         </IonList>
       </IonContent>
     </IonMenu>
