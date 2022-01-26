@@ -32,7 +32,7 @@ const Search = () => {
         body: JSON.stringify({ search: userSearch }),
       });
       const parsedData = await data.json();
-      console.log('going');
+
       dispatch(searchActions.updateSearch({ value: userSearch }));
       dispatch(searchActions.updatePodcasts({ pods: parsedData.feeds }));
     };

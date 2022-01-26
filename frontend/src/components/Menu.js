@@ -14,25 +14,16 @@ import {
 
 import { useLocation } from 'react-router-dom';
 import {
-  archiveOutline,
-  archiveSharp,
-  bookmarkOutline,
-  heartOutline,
-  heartSharp,
   mailOutline,
   mailSharp,
-  paperPlaneOutline,
-  paperPlaneSharp,
   searchOutline,
   searchSharp,
-  trashOutline,
-  trashSharp,
-  warningOutline,
-  warningSharp,
 } from 'ionicons/icons';
 import './Menu.css';
-import { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import LocStorage from '../utils/storage-model';
+import { useDispatch, useSelector } from 'react-redux';
+import { localRdx } from '../store/local-storage';
 
 const appPages = [
   {
@@ -51,13 +42,14 @@ const appPages = [
 
 const Menu = () => {
   const location = useLocation();
-  const [podcastList, setPodcastList] = useState([]);
+  const podcastList = useSelector((state) => state.localStore.podcastsRdx);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const getPods = async () => {
       const pods = await LocStorage.getStorage('PodcastList');
-      console.log(pods);
-      setPodcastList(pods);
+
+      dispatch(localRdx.updatePodcastList({ value: pods }));
     };
 
     getPods();
@@ -68,7 +60,7 @@ const Menu = () => {
       <IonContent>
         <IonList id='inbox-list'>
           <IonListHeader>Podcasts</IonListHeader>
-          {/* <IonNote>hi@ionicframework.com</IonNote> */}
+          <IonNote>Podcasting 2.0</IonNote>
           {appPages.map((appPage, index) => {
             return (
               <IonMenuToggle key={index} autoHide={false}>
@@ -122,4 +114,4 @@ const Menu = () => {
   );
 };
 
-export default Menu;
+export default React.memo(Menu);

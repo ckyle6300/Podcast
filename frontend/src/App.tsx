@@ -46,7 +46,7 @@ const App: React.FC = () => {
           <IonRouterOutlet id='main'>
             <Switch>
               <Route path='/' exact={true}>
-                <Redirect to='/page/Inbox' />
+                <Redirect to='/podcasts/search' />
               </Route>
               <Route path='/podcasts/search' exact>
                 <Search />

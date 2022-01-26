@@ -24,14 +24,16 @@ import LocStorage from '../utils/storage-model';
 import Card from '../components/Card';
 import Episodes from '../components/Episodes';
 import EpisodeModal from '../components/EpisodeModal';
+import { localRdx } from '../store/local-storage';
 
 const PodcastInfo = () => {
   const { podcastId } = useParams();
+  const podInfo = useSelector((state) => state.podcastInfo);
+  const podList = useSelector((state) => state.localStore.podcastsRdx);
   const [podcast, setPodcast] = useState();
   const [episodes, setEpisodes] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [favorite, setFavorite] = useState(false);
-  const podInfo = useSelector((state) => state.podcastInfo);
+  const [favorite, setFavorite] = useState();
   const modalRef = useRef();
 
   const dispatch = useDispatch();
@@ -40,15 +42,13 @@ const PodcastInfo = () => {
     const getPodcastInfo = async () => {
       const req = await fetch(`http://localhost:5100/podcast/${podcastId}`);
       const podcastInfo = await req.json();
-
-      // console.log({...podcastInfo.podcast, }, 'hello');
       setPodcast(podcastInfo.podcast.feed);
       setEpisodes(podcastInfo.episodes.items);
+      setFavorite(!!podList[podcastId]);
     };
     getPodcastInfo();
   }, [podcastId]);
 
-  console.log(podcast);
   const buttonHandler = async (idx) => {
     const episode = episodes[idx];
 
@@ -81,16 +81,15 @@ const PodcastInfo = () => {
   };
 
   const addPodcast = async () => {
-    let podcastList = await LocStorage.getStorage('PodcastList');
-    console.log(podcastList);
-    if (podcastList == null) {
-      podcastList = {};
+    const podcastList = { ...podList };
+    if (!favorite) {
+      podcastList[podcast.id] = podcast;
+    } else {
+      delete podcastList[podcast.id];
     }
-
-    podcastList[podcast.id] = podcast;
     LocStorage.add('PodcastList', podcastList);
-    console.log(podcastList);
-    setFavorite(true);
+    dispatch(localRdx.updatePodcastList({ value: podcastList }));
+    setFavorite((prev) => !prev);
   };
 
   return (
