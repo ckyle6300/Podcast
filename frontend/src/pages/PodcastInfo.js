@@ -14,20 +14,27 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
-import { addCircleOutline } from 'ionicons/icons';
+import { addCircle, addCircleOutline } from 'ionicons/icons';
 import { useDispatch } from 'react-redux';
 import { playEpisode } from '../store/podcastInfoSlice';
 import { useSelector } from 'react-redux';
+import LocStorage from '../utils/storage-model';
 import Card from '../components/Card';
 import Episodes from '../components/Episodes';
+import EpisodeModal from '../components/EpisodeModal';
+import { localRdx } from '../store/local-storage';
 
 const PodcastInfo = () => {
   const { podcastId } = useParams();
+  const podInfo = useSelector((state) => state.podcastInfo);
+  const podList = useSelector((state) => state.localStore.podcastsRdx);
   const [podcast, setPodcast] = useState();
   const [episodes, setEpisodes] = useState([]);
-  const podInfo = useSelector((state) => state.podcastInfo);
+  const [isOpen, setIsOpen] = useState(false);
+  const [favorite, setFavorite] = useState();
+  const modalRef = useRef();
 
   const dispatch = useDispatch();
 
@@ -35,9 +42,9 @@ const PodcastInfo = () => {
     const getPodcastInfo = async () => {
       const req = await fetch(`http://localhost:5100/podcast/${podcastId}`);
       const podcastInfo = await req.json();
-
       setPodcast(podcastInfo.podcast.feed);
       setEpisodes(podcastInfo.episodes.items);
+      setFavorite(!!podList[podcastId]);
     };
     getPodcastInfo();
   }, [podcastId]);
@@ -64,6 +71,27 @@ const PodcastInfo = () => {
     }
   };
 
+  const clickHandler = (epi, idx) => {
+    setIsOpen((prev) => !prev);
+    modalRef.current = {
+      epi: epi,
+      idx: idx,
+      podTitle: podcast.title,
+    };
+  };
+
+  const addPodcast = async () => {
+    const podcastList = { ...podList };
+    if (!favorite) {
+      podcastList[podcast.id] = podcast;
+    } else {
+      delete podcastList[podcast.id];
+    }
+    LocStorage.add('PodcastList', podcastList);
+    dispatch(localRdx.updatePodcastList({ value: podcastList }));
+    setFavorite((prev) => !prev);
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -74,9 +102,10 @@ const PodcastInfo = () => {
           </IonButtons>
           <IonButtons slot='end'>
             <IonIcon
-              icon={addCircleOutline}
+              icon={favorite ? addCircle : addCircleOutline}
               size='large'
               style={{ marginRight: '1rem' }}
+              onClick={addPodcast}
             />
           </IonButtons>
           <IonTitle>{podcast ? podcast.title : ''}</IonTitle>
@@ -103,11 +132,18 @@ const PodcastInfo = () => {
                       epi={epi}
                       buttonHandler={buttonHandler}
                       idx={idx}
+                      clickHandler={clickHandler}
                     />
                   ))}
               </IonList>
             </IonCol>
           </IonRow>
+          <EpisodeModal
+            isOpen={isOpen}
+            modalInfo={modalRef.current}
+            setIsOpen={setIsOpen}
+            buttonHandler={buttonHandler}
+          />
         </IonGrid>
       </IonContent>
     </IonPage>

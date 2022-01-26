@@ -1,7 +1,27 @@
-import { IonAvatar, IonIcon, IonImg, IonItem, IonLabel } from '@ionic/react';
-import { playOutline } from 'ionicons/icons';
+import { lazy } from 'react';
+import {
+  IonAvatar,
+  IonButton,
+  IonButtons,
+  IonCol,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonIcon,
+  IonImg,
+  IonItem,
+  IonLabel,
+  IonModal,
+  IonRow,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/react';
+import { playOutline, closeOutline } from 'ionicons/icons';
+import { useEffect, useState } from 'react';
 
-function parseSecondsIntoReadableTime(milliseconds) {
+import EpisodeModal from './EpisodeModal';
+
+export function parseSecondsIntoReadableTime(milliseconds) {
   //Get hours from seconds
   const hours = milliseconds / (60 * 60);
   const absoluteHours = Math.floor(hours);
@@ -20,26 +40,31 @@ function parseSecondsIntoReadableTime(milliseconds) {
   return h + ':' + m + ':' + s;
 }
 
-const Episodes = ({ epi, buttonHandler, idx }) => {
+const Episodes = ({ epi, buttonHandler, idx, clickHandler }) => {
   return (
-    <IonItem color='dark'>
-      <IonAvatar slot='start'>
-        <IonImg src={epi.feedImage} />
-      </IonAvatar>
-      <IonLabel className='ion-text-wrap'>
-        <h2>{epi.title}</h2>
-        <h3>{epi.datePublishedPretty}</h3>
-        {epi.duration > 0 && (
-          <p>{parseSecondsIntoReadableTime(epi.duration)}</p>
-        )}
-      </IonLabel>
-      <IonIcon
-        slot='end'
-        button
-        icon={playOutline}
-        onClick={() => buttonHandler(idx)}
-      />
-    </IonItem>
+    <>
+      <IonItem color='dark' button={true}>
+        <IonAvatar slot='start'>
+          <IonImg src={epi.feedImage} />
+        </IonAvatar>
+        <IonLabel
+          className='ion-text-wrap'
+          onClick={() => clickHandler(epi, idx)}
+        >
+          <h2>{epi.title}</h2>
+          <h3>{epi.datePublishedPretty}</h3>
+          {epi.duration > 0 && (
+            <p>{parseSecondsIntoReadableTime(epi.duration)}</p>
+          )}
+        </IonLabel>
+        <IonIcon
+          slot='end'
+          button
+          icon={playOutline}
+          onClick={() => buttonHandler(idx)}
+        />
+      </IonItem>
+    </>
   );
 };
 

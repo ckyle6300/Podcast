@@ -21,6 +21,7 @@ import Card from '../components/Card';
 const Search = () => {
   const inputSearch = useSelector((state) => state.search);
   const [userSearch, setUserSearch] = useState(inputSearch.inpSearch);
+  const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -31,7 +32,7 @@ const Search = () => {
         body: JSON.stringify({ search: userSearch }),
       });
       const parsedData = await data.json();
-      console.log('going');
+
       dispatch(searchActions.updateSearch({ value: userSearch }));
       dispatch(searchActions.updatePodcasts({ pods: parsedData.feeds }));
     };

@@ -19,6 +19,14 @@ const Card = ({ podcast, clicker, address }) => {
           {podcast.description && (
             <IonCardSubtitle>{podcast?.description}</IonCardSubtitle>
           )}
+          {podcast.funding && (
+            <p>
+              {podcast.funding.message} :{' '}
+              <a target='_blank' href={podcast.funding.url}>
+                {podcast.funding.url}
+              </a>
+            </p>
+          )}
         </IonCardHeader>
       </IonCard>
     );
