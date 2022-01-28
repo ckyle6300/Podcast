@@ -91,14 +91,13 @@ const PodcastInfo = () => {
     dispatch(localRdx.updatePodcastList({ value: podcastList }));
     setFavorite((prev) => !prev);
   };
-
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar color='primary' className='ion-text-center'>
           <IonButtons slot='start'>
             <IonMenuButton />
-            <IonBackButton defaultHref='search' />
+            <IonBackButton defaultHref='/search' />
           </IonButtons>
           <IonButtons slot='end'>
             <IonIcon
