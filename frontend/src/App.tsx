@@ -33,6 +33,7 @@ import PodcastInfo from './pages/PodcastInfo';
 import React from 'react';
 import Layout from './pages/Layout';
 import MyPodcasts from './pages/MyPodcasts';
+import NotFound from './pages/404';
 
 setupIonicReact();
 
@@ -54,7 +55,7 @@ const App: React.FC = () => {
               <Route path='/page/:name' exact={true} component={Page} />
               <Route path='/mypodcasts' exact component={MyPodcasts} />
               <Route>
-                <h1>404</h1>
+                <NotFound />
               </Route>
             </IonRouterOutlet>
           </IonSplitPane>
