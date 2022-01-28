@@ -14,15 +14,12 @@ import {
   IonToolbar,
 } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
-import { searchActions } from '../store/searchSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import Card from '../components/Card';
 
 const Search = () => {
-  // const inputSearch = useSelector((state) => state.search);
   const [userSearch, setUserSearch] = useState('');
   const [podcasts, setPodcasts] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -35,8 +32,7 @@ const Search = () => {
       const parsedData = await data.json();
 
       setPodcasts(parsedData.feeds);
-      // dispatch(searchActions.updateSearch({ value: userSearch }));
-      // dispatch(searchActions.updatePodcasts({ pods: parsedData.feeds }));
+      console.log('running');
     };
 
     let searchTimer;
@@ -48,7 +44,6 @@ const Search = () => {
     return () => clearTimeout(searchTimer);
   }, [userSearch, dispatch]);
 
-  console.log(podcasts);
   return (
     <IonPage>
       <IonHeader>

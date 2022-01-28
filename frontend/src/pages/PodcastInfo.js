@@ -91,7 +91,6 @@ const PodcastInfo = () => {
     dispatch(localRdx.updatePodcastList({ value: podcastList }));
     setFavorite((prev) => !prev);
   };
-  console.log(isOpen);
   return (
     <IonPage>
       <IonHeader>

@@ -28,7 +28,7 @@ import { localRdx } from '../store/local-storage';
 const appPages = [
   {
     title: 'Find Podcasts',
-    url: '/podcasts/search',
+    url: '/search',
     iosIcon: searchOutline,
     mdIcon: searchSharp,
   },
@@ -89,24 +89,26 @@ const Menu = () => {
           <IonListHeader>Subscribed Podcasts</IonListHeader>
           {podcastList &&
             Object.values(podcastList).map((podcast, index) => (
-              <IonItem
-                lines='none'
-                key={index}
-                className={
-                  location.pathname === `/podcasts/${podcast.id}`
-                    ? 'selected'
-                    : ''
-                }
-                routerLink={`/podcasts/${podcast.id}`}
-                routerDirection='none'
-                lines='none'
-                detail={false}
-              >
-                <IonAvatar slot='start'>
-                  <IonImg src={podcast.artwork} />
-                </IonAvatar>
-                <IonLabel>{podcast.title}</IonLabel>
-              </IonItem>
+              <IonMenuToggle key={index} autoHide={false}>
+                <IonItem
+                  lines='none'
+                  key={index}
+                  className={
+                    location.pathname === `/podcasts/${podcast.id}`
+                      ? 'selected'
+                      : ''
+                  }
+                  routerLink={`/podcasts/${podcast.id}`}
+                  routerDirection='none'
+                  lines='none'
+                  detail={false}
+                >
+                  <IonAvatar slot='start'>
+                    <IonImg src={podcast.artwork} />
+                  </IonAvatar>
+                  <IonLabel>{podcast.title}</IonLabel>
+                </IonItem>
+              </IonMenuToggle>
             ))}
         </IonList>
       </IonContent>
