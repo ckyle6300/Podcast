@@ -19,8 +19,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import Card from '../components/Card';
 
 const Search = () => {
-  const inputSearch = useSelector((state) => state.search);
-  const [userSearch, setUserSearch] = useState(inputSearch.inpSearch);
+  // const inputSearch = useSelector((state) => state.search);
+  const [userSearch, setUserSearch] = useState('');
+  const [podcasts, setPodcasts] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
 
@@ -33,8 +34,9 @@ const Search = () => {
       });
       const parsedData = await data.json();
 
-      dispatch(searchActions.updateSearch({ value: userSearch }));
-      dispatch(searchActions.updatePodcasts({ pods: parsedData.feeds }));
+      setPodcasts(parsedData.feeds);
+      // dispatch(searchActions.updateSearch({ value: userSearch }));
+      // dispatch(searchActions.updatePodcasts({ pods: parsedData.feeds }));
     };
 
     let searchTimer;
@@ -46,6 +48,7 @@ const Search = () => {
     return () => clearTimeout(searchTimer);
   }, [userSearch, dispatch]);
 
+  console.log(podcasts);
   return (
     <IonPage>
       <IonHeader>
@@ -74,7 +77,7 @@ const Search = () => {
             </IonCol>
           </IonRow>
           <IonRow>
-            {inputSearch.podResults.map((podcast, index) => (
+            {podcasts.map((podcast, index) => (
               <IonCol size='6' sizeSm='4' key={index}>
                 <Card
                   podcast={podcast}

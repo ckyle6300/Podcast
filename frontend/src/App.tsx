@@ -38,29 +38,19 @@ setupIonicReact();
 const App: React.FC = () => {
   return (
     <IonApp>
+      <IonContent></IonContent>
+      <Layout />
       <IonReactRouter>
-        <IonContent></IonContent>
-        <Layout />
         <IonSplitPane contentId='main'>
           <Menu />
           <IonRouterOutlet id='main'>
-            <Switch>
-              <Route path='/' exact={true}>
-                <Redirect to='/podcasts/search' />
-              </Route>
-              <Route path='/podcasts/search' exact>
-                <Search />
-              </Route>
-              <Route path='/podcasts/:podcastId' exact>
-                <PodcastInfo />
-              </Route>
-              <Route path='/page/:name' exact={true}>
-                <Page />
-              </Route>
-              <Route>
-                <h1>404</h1>
-              </Route>
-            </Switch>
+            <Redirect path='/' exact to='search' />
+            <Route path='/podcasts/:podcastId' component={PodcastInfo} exact />
+            <Route path='/search' component={Search} exact />
+            <Route path='/page/:name' exact={true} component={Page} />
+            <Route>
+              <h1>404</h1>
+            </Route>
           </IonRouterOutlet>
         </IonSplitPane>
       </IonReactRouter>
