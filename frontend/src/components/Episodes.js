@@ -16,10 +16,8 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
-import { playOutline, closeOutline } from 'ionicons/icons';
-import { useEffect, useState } from 'react';
-
-import EpisodeModal from './EpisodeModal';
+import { playOutline } from 'ionicons/icons';
+import React from 'react';
 
 export function parseSecondsIntoReadableTime(milliseconds) {
   //Get hours from seconds
@@ -68,4 +66,4 @@ const Episodes = ({ epi, buttonHandler, idx, clickHandler }) => {
   );
 };
 
-export default Episodes;
+export default React.memo(Episodes);

@@ -6,11 +6,13 @@ import Chapter from 'shikwasa/dist/shikwasa.chapter.cjs';
 import 'shikwasa/dist/shikwasa.chapter.css';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
+import styles from './Layout.module.css';
 
-const Layout = (props) => {
+const Layout = () => {
   const podInfo = useSelector((state) => state.podcastInfo);
   const { episode, podcast, count, chapters } = podInfo;
   const [player, setPlayer] = useState();
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     const runCode = async () => {
@@ -38,6 +40,7 @@ const Layout = (props) => {
       }
 
       if (count === 5) {
+        setShow(true);
         await Shikwasa.use(Chapter);
         try {
           setPlayer(
@@ -71,6 +74,8 @@ const Layout = (props) => {
     runCode();
   }, [episode]);
 
-  return <IonFooter className='ion-no-margin' id='players' />;
+  return (
+    <IonFooter collapse='fade' className={styles.foot} id='players'></IonFooter>
+  );
 };
 export default React.memo(Layout);

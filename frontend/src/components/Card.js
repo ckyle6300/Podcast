@@ -6,12 +6,14 @@ import {
   IonImg,
 } from '@ionic/react';
 import { useHistory } from 'react-router';
+import React from 'react';
 
 const Card = ({ podcast, clicker, address }) => {
   const history = useHistory();
+  let content;
 
   if (!clicker) {
-    return (
+    content = (
       <IonCard color='dark' className='ion-text-center'>
         <IonImg src={podcast?.artwork} alt={`${podcast.title}`} />
         <IonCardHeader>
@@ -30,20 +32,22 @@ const Card = ({ podcast, clicker, address }) => {
         </IonCardHeader>
       </IonCard>
     );
+  } else {
+    content = (
+      <IonCard
+        color='dark'
+        className='ion-text-center'
+        onClick={() => history.push(address)}
+      >
+        <img src={podcast?.artwork} alt={`${podcast.title}`} />
+        <IonCardHeader>
+          <IonCardTitle>{podcast?.title}</IonCardTitle>
+        </IonCardHeader>
+      </IonCard>
+    );
   }
 
-  return (
-    <IonCard
-      color='dark'
-      className='ion-text-center'
-      onClick={() => history.push(address)}
-    >
-      <img src={podcast?.artwork} alt={`${podcast.title}`} />
-      <IonCardHeader>
-        <IonCardTitle>{podcast?.title}</IonCardTitle>
-      </IonCardHeader>
-    </IonCard>
-  );
+  return <>{content}</>;
 };
 
-export default Card;
+export default React.memo(Card);

@@ -32,7 +32,6 @@ const Search = () => {
       const parsedData = await data.json();
 
       setPodcasts(parsedData.feeds);
-      console.log('running');
     };
 
     let searchTimer;

@@ -14,7 +14,7 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
 import { addCircle, addCircleOutline } from 'ionicons/icons';
 import { useDispatch } from 'react-redux';
@@ -30,7 +30,7 @@ const PodcastInfo = () => {
   const { podcastId } = useParams();
   const podInfo = useSelector((state) => state.podcastInfo);
   const podList = useSelector((state) => state.localStore.podcastsRdx);
-  const [podcast, setPodcast] = useState();
+  const [podcast, setPodcast] = useState([]);
   const [episodes, setEpisodes] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [favorite, setFavorite] = useState();
@@ -41,12 +41,18 @@ const PodcastInfo = () => {
   useEffect(() => {
     const getPodcastInfo = async () => {
       const req = await fetch(`http://localhost:5100/podcast/${podcastId}`);
-      const podcastInfo = await req.json();
-      setPodcast(podcastInfo.podcast.feed);
-      setEpisodes(podcastInfo.episodes.items);
+      const info = await req.json();
+      setPodcast(info.podcast.feed);
+      setEpisodes(info.episodes.items);
       setFavorite(!!podList[podcastId]);
     };
     getPodcastInfo();
+
+    return () => {
+      setPodcast([]);
+      setEpisodes([]);
+      setFavorite(false);
+    };
   }, [podcastId]);
 
   const buttonHandler = async (idx) => {
@@ -66,7 +72,11 @@ const PodcastInfo = () => {
       );
     } else {
       dispatch(
-        playEpisode.updatePodcast({ pod: podcast, epi: episode, chapters: chp })
+        playEpisode.updatePodcast({
+          pod: podcast,
+          epi: episode,
+          chapters: chp,
+        })
       );
     }
   };
@@ -91,6 +101,7 @@ const PodcastInfo = () => {
     dispatch(localRdx.updatePodcastList({ value: podcastList }));
     setFavorite((prev) => !prev);
   };
+
   return (
     <IonPage>
       <IonHeader>
@@ -112,20 +123,21 @@ const PodcastInfo = () => {
       </IonHeader>
       <IonContent color='secondary'>
         <IonGrid>
-          <IonRow>
-            <IonCol className='ion-no-padding' sizeSm='6' offsetSm='3'>
-              {podcast && <Card podcast={podcast} />}
-            </IonCol>
-          </IonRow>
-
-          <IonRow>
-            <IonCol sizeSm='10' offsetSm='1'>
-              <IonList className='ion-no-padding'>
-                <IonListHeader color='dark'>
-                  <h1 className='ion-text-center'>Episodes</h1>
-                </IonListHeader>
-                {episodes &&
-                  episodes.map((epi, idx) => (
+          {podcast.length !== 0 && (
+            <IonRow>
+              <IonCol className='ion-no-padding' sizeSm='6' offsetSm='3'>
+                <Card podcast={podcast} />
+              </IonCol>
+            </IonRow>
+          )}
+          {episodes.length !== 0 && (
+            <IonRow>
+              <IonCol sizeSm='10' offsetSm='1'>
+                <IonList className='ion-no-padding'>
+                  <IonListHeader color='dark'>
+                    <h1 className='ion-text-center'>Episodes</h1>
+                  </IonListHeader>
+                  {episodes.map((epi, idx) => (
                     <Episodes
                       key={idx}
                       epi={epi}
@@ -134,9 +146,10 @@ const PodcastInfo = () => {
                       clickHandler={clickHandler}
                     />
                   ))}
-              </IonList>
-            </IonCol>
-          </IonRow>
+                </IonList>
+              </IonCol>
+            </IonRow>
+          )}
           <EpisodeModal
             isOpen={isOpen}
             modalInfo={modalRef.current}
@@ -149,4 +162,4 @@ const PodcastInfo = () => {
   );
 };
 
-export default PodcastInfo;
+export default React.memo(PodcastInfo);
