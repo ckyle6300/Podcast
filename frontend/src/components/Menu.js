@@ -14,6 +14,7 @@ import {
 
 import { useLocation } from 'react-router-dom';
 import {
+  headset,
   mailOutline,
   mailSharp,
   searchOutline,
@@ -33,10 +34,10 @@ const appPages = [
     mdIcon: searchSharp,
   },
   {
-    title: 'Inbox',
-    url: '/page/Inbox',
-    iosIcon: mailOutline,
-    mdIcon: mailSharp,
+    title: 'My Podcasts',
+    url: '/mypodcasts',
+    iosIcon: headset,
+    mdIcon: headset,
   },
 ];
 

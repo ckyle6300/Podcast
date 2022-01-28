@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonFooter } from '@ionic/react';
+import { IonContent, IonFooter, IonPage } from '@ionic/react';
 import 'shikwasa/dist/shikwasa.min.css';
 import Shikwasa from 'shikwasa';
 import Chapter from 'shikwasa/dist/shikwasa.chapter.cjs';
@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import styles from './Layout.module.css';
 
-const Layout = () => {
+const Layout = (props) => {
   const podInfo = useSelector((state) => state.podcastInfo);
   const { episode, podcast, count, chapters } = podInfo;
   const [player, setPlayer] = useState();
@@ -66,7 +66,7 @@ const Layout = () => {
             })
           );
         } catch (error) {
-          console.log(error);
+          console.log(error, 'hello');
         }
       }
     };
@@ -75,7 +75,14 @@ const Layout = () => {
   }, [episode]);
 
   return (
-    <IonFooter collapse='fade' className={styles.foot} id='players'></IonFooter>
+    <>
+      <IonContent>{props.children}</IonContent>
+      <IonFooter
+        collapse='fade'
+        className={styles.foot}
+        id='players'
+      ></IonFooter>
+    </>
   );
 };
 export default React.memo(Layout);

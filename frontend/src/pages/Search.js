@@ -72,7 +72,12 @@ const Search = () => {
           </IonRow>
           <IonRow>
             {podcasts.map((podcast, index) => (
-              <IonCol size='6' sizeSm='4' key={index}>
+              <IonCol
+                size='6'
+                sizeSm='4'
+                key={index}
+                className='ion-no-padding'
+              >
                 <Card
                   podcast={podcast}
                   clicker={true}
