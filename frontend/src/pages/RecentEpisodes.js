@@ -10,15 +10,18 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import EpisodeModal from '../components/EpisodeModal';
 import Episodes from '../components/Episodes';
 import { playEpisode } from '../store/podcastInfoSlice';
 
 const RecentEpisodes = () => {
   const [episodes, setEpisodes] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
   const podList = useSelector((state) => state.localStore.podcastsRdx);
   const podInfo = useSelector((state) => state.podcastInfo);
+  const modalRef = useRef();
   const dispatch = useDispatch();
 
   useEffect(async () => {
@@ -65,6 +68,17 @@ const RecentEpisodes = () => {
     }
   };
 
+  const clickHandler = (epi, idx) => {
+    const episode = episodes[idx];
+    const podcast = podList[episode.feedId];
+    setIsOpen((prev) => !prev);
+    modalRef.current = {
+      epi: epi,
+      idx: idx,
+      podTitle: podcast.title,
+    };
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -86,6 +100,7 @@ const RecentEpisodes = () => {
                       key={idx}
                       epi={epi}
                       buttonHandler={buttonHandler}
+                      clickHandler={clickHandler}
                       idx={idx}
                     />
                   ))}
@@ -93,6 +108,12 @@ const RecentEpisodes = () => {
             </IonCol>
           </IonRow>
         </IonGrid>
+        <EpisodeModal
+          isOpen={isOpen}
+          modalInfo={modalRef.current}
+          setIsOpen={setIsOpen}
+          buttonHandler={buttonHandler}
+        />
       </IonContent>
     </IonPage>
   );
