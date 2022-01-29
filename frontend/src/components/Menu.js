@@ -14,6 +14,7 @@ import {
 
 import { useLocation } from 'react-router-dom';
 import {
+  caretForwardOutline,
   headset,
   mailOutline,
   mailSharp,
@@ -38,6 +39,12 @@ const appPages = [
     url: '/mypodcasts',
     iosIcon: headset,
     mdIcon: headset,
+  },
+  {
+    title: 'Recent Episodes',
+    url: '/mypodcasts/episodes',
+    iosIcon: caretForwardOutline,
+    mdIcon: caretForwardOutline,
   },
 ];
 

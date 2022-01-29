@@ -34,6 +34,7 @@ import React from 'react';
 import Layout from './pages/Layout';
 import MyPodcasts from './pages/MyPodcasts';
 import NotFound from './pages/404';
+import RecentEpisodes from './pages/RecentEpisodes';
 
 setupIonicReact();
 
@@ -54,6 +55,11 @@ const App: React.FC = () => {
               <Route path='/search' component={Search} exact />
               <Route path='/page/:name' exact={true} component={Page} />
               <Route path='/mypodcasts' exact component={MyPodcasts} />
+              <Route
+                path='/mypodcasts/episodes'
+                exact
+                component={RecentEpisodes}
+              />
               <Route>
                 <NotFound />
               </Route>
