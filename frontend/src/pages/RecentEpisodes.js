@@ -25,6 +25,7 @@ const RecentEpisodes = () => {
   const [episodes, setEpisodes] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const podList = useSelector((state) => state.localStore.podcastsRdx);
   const podInfo = useSelector((state) => state.podcastInfo);
 
@@ -33,7 +34,14 @@ const RecentEpisodes = () => {
 
   useEffect(() => {
     const getRecent = async () => {
-      const podcastIds = Object.keys(podList);
+      let podcastIds;
+      try {
+        podcastIds = Object.keys(podList);
+      } catch (error) {
+        setError(true);
+        setLoading(false);
+        return;
+      }
       const data = await fetch('http://localhost:5100/podcast/recent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -87,6 +95,8 @@ const RecentEpisodes = () => {
     };
   };
 
+  console.log(podList);
+
   return (
     <IonPage>
       <IonHeader>
@@ -106,7 +116,12 @@ const RecentEpisodes = () => {
             duration={5000}
           />
         )}
-        {!loading && (
+        {!loading && error && (
+          <div className='ion-text-center ion-padding top'>
+            <h2>Subscribe to a podcast to see recent episodes.</h2>
+          </div>
+        )}
+        {!loading && !error && (
           <IonGrid>
             <IonRow>
               <IonCol sizeSm='10' offsetSm='1'>
