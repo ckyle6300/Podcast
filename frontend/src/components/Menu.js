@@ -112,7 +112,7 @@ const Menu = () => {
                   detail={false}
                 >
                   <IonAvatar slot='start'>
-                    <IonImg src={podcast.artwork} />
+                    <IonImg src={podcast.artwork} alt='podcast image' />
                   </IonAvatar>
                   <IonLabel>{podcast.title}</IonLabel>
                 </IonItem>
