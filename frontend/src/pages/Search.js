@@ -37,7 +37,7 @@ const Search = () => {
     let searchTimer;
 
     if (userSearch.length >= 3) {
-      searchTimer = setTimeout(getUrl, 500);
+      searchTimer = setTimeout(getUrl, 700);
     }
 
     return () => clearTimeout(searchTimer);

@@ -52,12 +52,12 @@ const MyPodcasts = () => {
         {!podcasts && !error && (
           <IonLoading isOpen={true} message={'Loading...'} duration={5000} />
         )}
-        {error && (
+        {(error || podcasts?.length == 0) && (
           <div className='ion-text-center ion-padding-top'>
             <h2>No Subscribed Podcasts</h2>
           </div>
         )}
-        {podcasts && (
+        {podcasts && !error && (
           <IonGrid>
             <IonRow>
               {podcasts &&

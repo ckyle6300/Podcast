@@ -38,6 +38,7 @@ const RecentEpisodes = () => {
       try {
         podcastIds = Object.keys(podList);
       } catch (error) {
+        console.log('in error');
         setError(true);
         setLoading(false);
         return;
@@ -96,6 +97,7 @@ const RecentEpisodes = () => {
   };
 
   console.log(podList);
+  console.log(episodes);
 
   return (
     <IonPage>
@@ -116,12 +118,12 @@ const RecentEpisodes = () => {
             duration={5000}
           />
         )}
-        {!loading && error && (
+        {!loading && (error || episodes == undefined) && (
           <div className='ion-text-center ion-padding top'>
             <h2>Subscribe to a podcast to see recent episodes.</h2>
           </div>
         )}
-        {!loading && !error && (
+        {!loading && !error && episodes !== undefined && (
           <IonGrid>
             <IonRow>
               <IonCol sizeSm='10' offsetSm='1'>
