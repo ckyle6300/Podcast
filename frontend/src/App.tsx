@@ -32,28 +32,41 @@ import './theme/variables.css';
 import PodcastInfo from './pages/PodcastInfo';
 import React from 'react';
 import Layout from './pages/Layout';
+import MyPodcasts from './pages/MyPodcasts';
+import NotFound from './pages/404';
+import RecentEpisodes from './pages/RecentEpisodes';
 
 setupIonicReact();
 
 const App: React.FC = () => {
   return (
     <IonApp>
-      <IonContent></IonContent>
-      <Layout />
-      <IonReactRouter>
-        <IonSplitPane contentId='main'>
-          <Menu />
-          <IonRouterOutlet id='main'>
-            <Redirect path='/' exact to='search' />
-            <Route path='/podcasts/:podcastId' component={PodcastInfo} exact />
-            <Route path='/search' component={Search} exact />
-            <Route path='/page/:name' exact={true} component={Page} />
-            <Route>
-              <h1>404</h1>
-            </Route>
-          </IonRouterOutlet>
-        </IonSplitPane>
-      </IonReactRouter>
+      <Layout>
+        <IonReactRouter>
+          <IonSplitPane contentId='main'>
+            <Menu />
+            <IonRouterOutlet id='main'>
+              <Redirect path='/' exact to='/mypodcasts' />
+              <Route
+                path='/podcasts/:podcastId'
+                component={PodcastInfo}
+                exact
+              />
+              <Route path='/search' component={Search} exact />
+              <Route path='/page/:name' exact={true} component={Page} />
+              <Route path='/mypodcasts' exact component={MyPodcasts} />
+              <Route
+                path='/mypodcasts/episodes'
+                exact
+                component={RecentEpisodes}
+              />
+              <Route>
+                <NotFound />
+              </Route>
+            </IonRouterOutlet>
+          </IonSplitPane>
+        </IonReactRouter>
+      </Layout>
     </IonApp>
   );
 };

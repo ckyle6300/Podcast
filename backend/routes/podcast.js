@@ -21,7 +21,7 @@ router.get('/:podcastId', async (req, res) => {
   const podcastId = req.params.podcastId;
   const podcast = await client.podcastById(podcastId);
   const episodes = await client.episodesByFeedId(podcastId, {
-    max: 50,
+    max: 1000,
     fulltext: true,
   });
   res.json({ podcast, episodes });
@@ -35,6 +35,22 @@ router.post('/chapters', async (req, res) => {
     return res.send(chap.chapters);
   }
   return res.json([]);
+});
+
+router.post('/recent', async (req, res) => {
+  const { podcastIds } = req.body;
+  const ids = podcastIds.map((id) => Number(id));
+  try {
+    const episodes = await client.episodesByFeedId(ids, {
+      since: -2592000,
+      max: 500,
+      fulltext: true,
+    });
+
+    res.json(episodes);
+  } catch (error) {
+    res.json([]);
+  }
 });
 
 module.exports = router;

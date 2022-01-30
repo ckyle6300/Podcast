@@ -16,10 +16,8 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
-import { playOutline, closeOutline } from 'ionicons/icons';
-import { useEffect, useState } from 'react';
-
-import EpisodeModal from './EpisodeModal';
+import { playOutline } from 'ionicons/icons';
+import React from 'react';
 
 export function parseSecondsIntoReadableTime(milliseconds) {
   //Get hours from seconds
@@ -41,31 +39,33 @@ export function parseSecondsIntoReadableTime(milliseconds) {
 }
 
 const Episodes = ({ epi, buttonHandler, idx, clickHandler }) => {
-  return (
-    <>
-      <IonItem color='dark' button={true}>
-        <IonAvatar slot='start'>
-          <IonImg src={epi.feedImage} />
-        </IonAvatar>
-        <IonLabel
-          className='ion-text-wrap'
-          onClick={() => clickHandler(epi, idx)}
-        >
-          <h2>{epi.title}</h2>
-          <h3>{epi.datePublishedPretty}</h3>
-          {epi.duration > 0 && (
-            <p>{parseSecondsIntoReadableTime(epi.duration)}</p>
-          )}
-        </IonLabel>
-        <IonIcon
-          slot='end'
-          button
-          icon={playOutline}
-          onClick={() => buttonHandler(idx)}
-        />
-      </IonItem>
-    </>
-  );
+  if (epi) {
+    return (
+      <>
+        <IonItem color='dark' button={true}>
+          <IonAvatar slot='start'>
+            <IonImg src={epi.feedImage} alt='podcast photo' />
+          </IonAvatar>
+          <IonLabel
+            className='ion-text-wrap'
+            onClick={() => clickHandler(epi, idx)}
+          >
+            <h2>{epi.title}</h2>
+            <h3>{epi.datePublishedPretty}</h3>
+            {epi.duration > 0 && (
+              <p>{parseSecondsIntoReadableTime(epi.duration)}</p>
+            )}
+          </IonLabel>
+          <IonIcon
+            slot='end'
+            button
+            icon={playOutline}
+            onClick={() => buttonHandler(idx)}
+          />
+        </IonItem>
+      </>
+    );
+  } else return <></>;
 };
 
-export default Episodes;
+export default React.memo(Episodes);

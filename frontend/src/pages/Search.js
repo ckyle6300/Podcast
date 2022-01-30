@@ -32,13 +32,12 @@ const Search = () => {
       const parsedData = await data.json();
 
       setPodcasts(parsedData.feeds);
-      console.log('running');
     };
 
     let searchTimer;
 
     if (userSearch.length >= 3) {
-      searchTimer = setTimeout(getUrl, 700);
+      searchTimer = setTimeout(getUrl, 500);
     }
 
     return () => clearTimeout(searchTimer);
@@ -73,7 +72,12 @@ const Search = () => {
           </IonRow>
           <IonRow>
             {podcasts.map((podcast, index) => (
-              <IonCol size='6' sizeSm='4' key={index}>
+              <IonCol
+                size='6'
+                sizeSm='4'
+                key={index}
+                className='ion-no-padding'
+              >
                 <Card
                   podcast={podcast}
                   clicker={true}

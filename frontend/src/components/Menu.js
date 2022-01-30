@@ -14,6 +14,8 @@ import {
 
 import { useLocation } from 'react-router-dom';
 import {
+  caretForwardOutline,
+  headset,
   mailOutline,
   mailSharp,
   searchOutline,
@@ -33,10 +35,16 @@ const appPages = [
     mdIcon: searchSharp,
   },
   {
-    title: 'Inbox',
-    url: '/page/Inbox',
-    iosIcon: mailOutline,
-    mdIcon: mailSharp,
+    title: 'My Podcasts',
+    url: '/mypodcasts',
+    iosIcon: headset,
+    mdIcon: headset,
+  },
+  {
+    title: 'Recent Episodes',
+    url: '/mypodcasts/episodes',
+    iosIcon: caretForwardOutline,
+    mdIcon: caretForwardOutline,
   },
 ];
 
@@ -104,7 +112,7 @@ const Menu = () => {
                   detail={false}
                 >
                   <IonAvatar slot='start'>
-                    <IonImg src={podcast.artwork} />
+                    <IonImg src={podcast.artwork} alt='podcast image' />
                   </IonAvatar>
                   <IonLabel>{podcast.title}</IonLabel>
                 </IonItem>

@@ -68,10 +68,8 @@ const EpisodeModal = ({ isOpen, setIsOpen, buttonHandler, modalInfo }) => {
   //     });
   // }, []);
 
-  // console.log(epi.description);
-
   return (
-    <IonModal isOpen={isOpen}>
+    <IonModal isOpen={isOpen} onDidDismiss={() => setIsOpen(false)}>
       <IonHeader>
         <IonToolbar color='primary'>
           <IonTitle>{epi?.title}</IonTitle>
@@ -79,7 +77,7 @@ const EpisodeModal = ({ isOpen, setIsOpen, buttonHandler, modalInfo }) => {
             <IonButton
               fill='clear'
               color='dark'
-              onClick={() => setIsOpen((prev) => !prev)}
+              onClick={() => setIsOpen(false)}
             >
               close
               <IonIcon slot='end' icon={closeOutline} />
