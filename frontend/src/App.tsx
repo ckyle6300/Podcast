@@ -46,7 +46,7 @@ const App: React.FC = () => {
           <IonSplitPane contentId='main'>
             <Menu />
             <IonRouterOutlet id='main'>
-              <Redirect path='/' exact to='search' />
+              <Redirect path='/' exact to='/mypodcasts' />
               <Route
                 path='/podcasts/:podcastId'
                 component={PodcastInfo}

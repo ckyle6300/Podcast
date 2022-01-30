@@ -30,9 +30,7 @@ const MyPodcasts = () => {
 
   useEffect(() => {
     setPodcasts(Object.values(podcastList));
-  }, []);
-
-  const loading = Object.keys(podcastList);
+  }, [podcastList]);
 
   console.log(podcasts);
   return (

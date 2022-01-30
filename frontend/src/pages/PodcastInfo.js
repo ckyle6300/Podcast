@@ -6,6 +6,8 @@ import {
   IonGrid,
   IonHeader,
   IonIcon,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
   IonList,
   IonListHeader,
   IonLoading,
@@ -14,6 +16,7 @@ import {
   IonRow,
   IonTitle,
   IonToolbar,
+  useIonViewWillEnter,
 } from '@ionic/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
@@ -36,6 +39,9 @@ const PodcastInfo = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [favorite, setFavorite] = useState();
   const [loading, setLoading] = useState(true);
+  const [visibleEpi, setVisibleEpi] = useState([]);
+  const [isInfiniteDisabled, setInfiniteDisabled] = useState(false);
+
   const modalRef = useRef();
 
   const dispatch = useDispatch();
@@ -48,6 +54,8 @@ const PodcastInfo = () => {
       setEpisodes(info.episodes.items);
       setFavorite(!!podList[podcastId]);
       setLoading(false);
+      console.log(info.episodes.items);
+      setVisibleEpi(info.episodes.items.slice(0, 10));
     };
     getPodcastInfo();
 
@@ -106,6 +114,40 @@ const PodcastInfo = () => {
     setFavorite((prev) => !prev);
   };
 
+  let data;
+  if (episodes.length > 0) {
+    data = [...episodes];
+  }
+
+  const pushData = () => {
+    const max = visibleEpi.length + 10;
+    const min = max - 10;
+    const newData = [];
+    for (let i = min; i < max; i++) {
+      console.log(data);
+      try {
+        newData.push(data[i]);
+      } catch (error) {}
+    }
+    setVisibleEpi((prev) => [...prev, ...newData]);
+  };
+
+  const loadData = (ev) => {
+    setTimeout(() => {
+      pushData();
+      console.log('Loaded data');
+      ev.target.complete();
+      if (visibleEpi.length == episodes.length) {
+        setInfiniteDisabled(true);
+      }
+    }, 200);
+  };
+
+  useIonViewWillEnter(() => {
+    pushData();
+  });
+
+  console.log(episodes);
   return (
     <IonPage>
       <IonHeader>
@@ -150,7 +192,7 @@ const PodcastInfo = () => {
                     <IonListHeader color='dark'>
                       <h1 className='ion-text-center'>Episodes</h1>
                     </IonListHeader>
-                    {episodes.map((epi, idx) => (
+                    {visibleEpi.map((epi, idx) => (
                       <Episodes
                         key={idx}
                         epi={epi}
@@ -163,6 +205,16 @@ const PodcastInfo = () => {
                 </IonCol>
               </IonRow>
             )}
+            <IonInfiniteScroll
+              onIonInfinite={loadData}
+              threshold='300px'
+              disabled={isInfiniteDisabled}
+            >
+              <IonInfiniteScrollContent
+                loadingSpinner='bubbles'
+                loadingText='Loading more data...'
+              />
+            </IonInfiniteScroll>
             <EpisodeModal
               isOpen={isOpen}
               modalInfo={modalRef.current}
