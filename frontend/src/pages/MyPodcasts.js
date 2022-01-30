@@ -7,6 +7,7 @@ import {
   IonGrid,
   IonHeader,
   IonIcon,
+  IonLoading,
   IonMenuButton,
   IonPage,
   IonRow,
@@ -17,13 +18,23 @@ import { add } from 'ionicons/icons';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import Card from '../components/Card';
+import React, { useEffect, useState } from 'react';
 
 const MyPodcasts = () => {
   const podcastList = useSelector((state) => state.localStore.podcastsRdx);
+  const [podcasts, setPodcasts] = useState();
   const history = useHistory();
   const searching = () => {
     history.push('/search');
   };
+
+  useEffect(() => {
+    setPodcasts(Object.values(podcastList));
+  }, []);
+
+  const loading = Object.keys(podcastList);
+
+  console.log(podcasts);
   return (
     <IonPage>
       <IonHeader>
@@ -35,25 +46,30 @@ const MyPodcasts = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent color='secondary'>
-        <IonGrid>
-          <IonRow>
-            {podcastList &&
-              Object.values(podcastList).map((podcast, index) => (
-                <IonCol
-                  size='6'
-                  sizeSm='4'
-                  key={index}
-                  className='ion-no-padding'
-                >
-                  <Card
-                    podcast={podcast}
-                    clicker={true}
-                    address={`/podcasts/${podcast.id}`}
-                  />
-                </IonCol>
-              ))}
-          </IonRow>
-        </IonGrid>
+        {!podcasts && (
+          <IonLoading isOpen={true} message={'Loading...'} duration={5000} />
+        )}
+        {podcasts && (
+          <IonGrid>
+            <IonRow>
+              {podcasts &&
+                podcasts.map((podcast, index) => (
+                  <IonCol
+                    size='6'
+                    sizeSm='4'
+                    key={index}
+                    className='ion-no-padding'
+                  >
+                    <Card
+                      podcast={podcast}
+                      clicker={true}
+                      address={`/podcasts/${podcast.id}`}
+                    />
+                  </IonCol>
+                ))}
+            </IonRow>
+          </IonGrid>
+        )}
       </IonContent>
       <IonFab
         vertical='bottom'
@@ -69,4 +85,4 @@ const MyPodcasts = () => {
   );
 };
 
-export default MyPodcasts;
+export default React.memo(MyPodcasts);

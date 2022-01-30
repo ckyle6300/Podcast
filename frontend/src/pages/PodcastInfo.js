@@ -8,6 +8,7 @@ import {
   IonIcon,
   IonList,
   IonListHeader,
+  IonLoading,
   IonMenuButton,
   IonPage,
   IonRow,
@@ -34,6 +35,7 @@ const PodcastInfo = () => {
   const [episodes, setEpisodes] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [favorite, setFavorite] = useState();
+  const [loading, setLoading] = useState(true);
   const modalRef = useRef();
 
   const dispatch = useDispatch();
@@ -45,6 +47,7 @@ const PodcastInfo = () => {
       setPodcast(info.podcast.feed);
       setEpisodes(info.episodes.items);
       setFavorite(!!podList[podcastId]);
+      setLoading(false);
     };
     getPodcastInfo();
 
@@ -52,6 +55,7 @@ const PodcastInfo = () => {
       setPodcast([]);
       setEpisodes([]);
       setFavorite(false);
+      setLoading(true);
     };
   }, [podcastId]);
 
@@ -122,41 +126,51 @@ const PodcastInfo = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent color='secondary'>
-        <IonGrid>
-          {podcast.length !== 0 && (
-            <IonRow>
-              <IonCol className='ion-no-padding' sizeSm='6' offsetSm='3'>
-                <Card podcast={podcast} />
-              </IonCol>
-            </IonRow>
-          )}
-          {episodes.length !== 0 && (
-            <IonRow>
-              <IonCol sizeSm='10' offsetSm='1'>
-                <IonList className='ion-no-padding'>
-                  <IonListHeader color='dark'>
-                    <h1 className='ion-text-center'>Episodes</h1>
-                  </IonListHeader>
-                  {episodes.map((epi, idx) => (
-                    <Episodes
-                      key={idx}
-                      epi={epi}
-                      buttonHandler={buttonHandler}
-                      idx={idx}
-                      clickHandler={clickHandler}
-                    />
-                  ))}
-                </IonList>
-              </IonCol>
-            </IonRow>
-          )}
-          <EpisodeModal
-            isOpen={isOpen}
-            modalInfo={modalRef.current}
-            setIsOpen={setIsOpen}
-            buttonHandler={buttonHandler}
+        {loading && (
+          <IonLoading
+            isOpen={loading}
+            onDidDismiss={() => setLoading(false)}
+            message={'Loading...'}
+            duration={5000}
           />
-        </IonGrid>
+        )}
+        {!loading && (
+          <IonGrid>
+            {podcast.length !== 0 && (
+              <IonRow>
+                <IonCol className='ion-no-padding' sizeSm='6' offsetSm='3'>
+                  <Card podcast={podcast} />
+                </IonCol>
+              </IonRow>
+            )}
+            {episodes.length !== 0 && (
+              <IonRow>
+                <IonCol sizeSm='10' offsetSm='1'>
+                  <IonList className='ion-no-padding'>
+                    <IonListHeader color='dark'>
+                      <h1 className='ion-text-center'>Episodes</h1>
+                    </IonListHeader>
+                    {episodes.map((epi, idx) => (
+                      <Episodes
+                        key={idx}
+                        epi={epi}
+                        buttonHandler={buttonHandler}
+                        idx={idx}
+                        clickHandler={clickHandler}
+                      />
+                    ))}
+                  </IonList>
+                </IonCol>
+              </IonRow>
+            )}
+            <EpisodeModal
+              isOpen={isOpen}
+              modalInfo={modalRef.current}
+              setIsOpen={setIsOpen}
+              buttonHandler={buttonHandler}
+            />
+          </IonGrid>
+        )}
       </IonContent>
     </IonPage>
   );
