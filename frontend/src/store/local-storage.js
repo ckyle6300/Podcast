@@ -12,5 +12,7 @@ const storageSlice = createSlice({
   },
 });
 
+console.log('why am I here?');
+
 export default storageSlice;
 export const localRdx = storageSlice.actions;

@@ -24,5 +24,36 @@ const podcastSlice = createSlice({
   },
 });
 
-export default podcastSlice;
 export const playEpisode = podcastSlice.actions;
+
+export const playPodcast = (podcast, episode, count) => {
+  return async (dispatch) => {
+    const data = await fetch('http://localhost:5100/podcast/chapters', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chapterUrl: episode.chaptersUrl }),
+    });
+
+    const chp = await data.json();
+
+    if (count === 0) {
+      dispatch(
+        playEpisode.newPodcast({
+          pod: podcast,
+          epi: episode,
+          chapters: chp,
+        })
+      );
+    } else {
+      dispatch(
+        playEpisode.updatePodcast({
+          pod: podcast,
+          epi: episode,
+          chapters: chp,
+        })
+      );
+    }
+  };
+};
+
+export default podcastSlice;

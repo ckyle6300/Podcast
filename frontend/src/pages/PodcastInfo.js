@@ -22,7 +22,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
 import { addCircle, addCircleOutline } from 'ionicons/icons';
 import { useDispatch } from 'react-redux';
-import { playEpisode } from '../store/podcastInfoSlice';
+import { playPodcast } from '../store/podcastInfoSlice';
 import { useSelector } from 'react-redux';
 import LocStorage from '../utils/storage-model';
 import Card from '../components/Card';
@@ -64,34 +64,9 @@ const PodcastInfo = () => {
     setVisibleEpi(selectedPodcast.episodes.slice(0, 10));
   }, [selectedPodcast]);
 
-  const buttonHandler = async (idx) => {
+  const buttonHandler = (idx) => {
     const episode = selectedPodcast.episodes[idx];
-
-    const data = await fetch('http://localhost:5100/podcast/chapters', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chapterUrl: episode.chaptersUrl }),
-    });
-
-    const chp = await data.json();
-
-    if (podInfo.count === 0) {
-      dispatch(
-        playEpisode.newPodcast({
-          pod: selectedPodcast.podcast,
-          epi: selectedPodcast.episodes,
-          chapters: chp,
-        })
-      );
-    } else {
-      dispatch(
-        playEpisode.updatePodcast({
-          pod: selectedPodcast.podcast,
-          epi: selectedPodcast.episodes,
-          chapters: chp,
-        })
-      );
-    }
+    dispatch(playPodcast(selectedPodcast.podcast, episode, podInfo.count));
   };
 
   const clickHandler = (epi, idx) => {
@@ -125,7 +100,6 @@ const PodcastInfo = () => {
     const min = max - 10;
     const newData = [];
     for (let i = min; i < max; i++) {
-      console.log(data);
       try {
         newData.push(data[i]);
       } catch (error) {}
@@ -148,9 +122,6 @@ const PodcastInfo = () => {
     pushData();
   });
 
-  console.log(selectedPodcast);
-  console.log(visibleEpi);
-  console.log(loading);
   return (
     <IonPage>
       <IonHeader>
