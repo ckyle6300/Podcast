@@ -24,11 +24,10 @@ import { addCircle, addCircleOutline } from 'ionicons/icons';
 import { useDispatch } from 'react-redux';
 import { playPodcast } from '../store/podcastInfoSlice';
 import { useSelector } from 'react-redux';
-import LocStorage from '../utils/storage-model';
 import Card from '../components/Card';
 import Episodes from '../components/Episodes';
 import EpisodeModal from '../components/EpisodeModal';
-import { localRdx } from '../store/local-storage';
+import { addToFavorites, localRdx } from '../store/local-storage';
 import { sendPodcastData } from '../store/selectedPodcast';
 
 const PodcastInfo = () => {
@@ -80,13 +79,7 @@ const PodcastInfo = () => {
 
   const addPodcast = async () => {
     const podcastList = { ...podList };
-    if (!favorite) {
-      podcastList[selectedPodcast.podcast.id] = selectedPodcast.podcast;
-    } else {
-      delete podcastList[selectedPodcast.podcast.id];
-    }
-    LocStorage.add('PodcastList', podcastList);
-    dispatch(localRdx.updatePodcastList({ value: podcastList }));
+    dispatch(addToFavorites(podcastList, favorite, selectedPodcast.podcast));
     setFavorite((prev) => !prev);
   };
 

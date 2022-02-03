@@ -24,8 +24,6 @@ const podcastSlice = createSlice({
   },
 });
 
-export const playEpisode = podcastSlice.actions;
-
 export const playPodcast = (podcast, episode, count) => {
   return async (dispatch) => {
     const data = await fetch('http://localhost:5100/podcast/chapters', {
@@ -56,4 +54,5 @@ export const playPodcast = (podcast, episode, count) => {
   };
 };
 
+export const playEpisode = podcastSlice.actions;
 export default podcastSlice;
