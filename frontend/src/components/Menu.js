@@ -64,7 +64,7 @@ const Menu = () => {
   }, []);
 
   return (
-    <IonMenu contentId='main' type='overlay'>
+    <IonMenu contentId='main' type='overlay' swipeGesture={true}>
       <IonContent>
         <IonList id='inbox-list'>
           <IonListHeader>Podcasts</IonListHeader>

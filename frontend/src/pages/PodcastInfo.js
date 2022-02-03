@@ -29,13 +29,13 @@ import Card from '../components/Card';
 import Episodes from '../components/Episodes';
 import EpisodeModal from '../components/EpisodeModal';
 import { localRdx } from '../store/local-storage';
+import { sendPodcastData } from '../store/selectedPodcast';
 
 const PodcastInfo = () => {
   const { podcastId } = useParams();
   const podInfo = useSelector((state) => state.podcastInfo);
   const podList = useSelector((state) => state.localStore.podcastsRdx);
-  const [podcast, setPodcast] = useState([]);
-  const [episodes, setEpisodes] = useState([]);
+  const selectedPodcast = useSelector((state) => state.selected);
   const [isOpen, setIsOpen] = useState(false);
   const [favorite, setFavorite] = useState();
   const [loading, setLoading] = useState(true);
@@ -48,27 +48,24 @@ const PodcastInfo = () => {
 
   useEffect(() => {
     const getPodcastInfo = async () => {
-      const req = await fetch(`http://localhost:5100/podcast/${podcastId}`);
-      const info = await req.json();
-      setPodcast(info.podcast.feed);
-      setEpisodes(info.episodes.items);
-      setFavorite(!!podList[podcastId]);
-      setLoading(false);
-      console.log(info.episodes.items);
-      setVisibleEpi(info.episodes.items.slice(0, 10));
+      await dispatch(sendPodcastData(podcastId));
     };
     getPodcastInfo();
-
     return () => {
-      setPodcast([]);
-      setEpisodes([]);
       setFavorite(false);
       setLoading(true);
+      setVisibleEpi([]);
     };
   }, [podcastId]);
 
+  useEffect(() => {
+    setFavorite(!!podList[podcastId]);
+    setLoading(false);
+    setVisibleEpi(selectedPodcast.episodes.slice(0, 10));
+  }, [selectedPodcast]);
+
   const buttonHandler = async (idx) => {
-    const episode = episodes[idx];
+    const episode = selectedPodcast.episodes[idx];
 
     const data = await fetch('http://localhost:5100/podcast/chapters', {
       method: 'POST',
@@ -80,13 +77,17 @@ const PodcastInfo = () => {
 
     if (podInfo.count === 0) {
       dispatch(
-        playEpisode.newPodcast({ pod: podcast, epi: episode, chapters: chp })
+        playEpisode.newPodcast({
+          pod: selectedPodcast.podcast,
+          epi: selectedPodcast.episodes,
+          chapters: chp,
+        })
       );
     } else {
       dispatch(
         playEpisode.updatePodcast({
-          pod: podcast,
-          epi: episode,
+          pod: selectedPodcast.podcast,
+          epi: selectedPodcast.episodes,
           chapters: chp,
         })
       );
@@ -98,16 +99,16 @@ const PodcastInfo = () => {
     modalRef.current = {
       epi: epi,
       idx: idx,
-      podTitle: podcast.title,
+      podTitle: selectedPodcast.podcast.title,
     };
   };
 
   const addPodcast = async () => {
     const podcastList = { ...podList };
     if (!favorite) {
-      podcastList[podcast.id] = podcast;
+      podcastList[selectedPodcast.podcast.id] = selectedPodcast.podcast;
     } else {
-      delete podcastList[podcast.id];
+      delete podcastList[selectedPodcast.podcast.id];
     }
     LocStorage.add('PodcastList', podcastList);
     dispatch(localRdx.updatePodcastList({ value: podcastList }));
@@ -115,8 +116,8 @@ const PodcastInfo = () => {
   };
 
   let data;
-  if (episodes.length > 0) {
-    data = [...episodes];
+  if (selectedPodcast.episodes.length > 0) {
+    data = [...selectedPodcast.episodes];
   }
 
   const pushData = () => {
@@ -137,7 +138,7 @@ const PodcastInfo = () => {
       pushData();
       console.log('Loaded data');
       ev.target.complete();
-      if (visibleEpi.length == episodes.length) {
+      if (visibleEpi.length == selectedPodcast.episodes.length) {
         setInfiniteDisabled(true);
       }
     }, 200);
@@ -147,7 +148,9 @@ const PodcastInfo = () => {
     pushData();
   });
 
-  console.log(episodes);
+  console.log(selectedPodcast);
+  console.log(visibleEpi);
+  console.log(loading);
   return (
     <IonPage>
       <IonHeader>
@@ -164,7 +167,9 @@ const PodcastInfo = () => {
               onClick={addPodcast}
             />
           </IonButtons>
-          <IonTitle>{podcast ? podcast.title : ''}</IonTitle>
+          <IonTitle>
+            {selectedPodcast.podcast ? selectedPodcast.podcast.title : ''}
+          </IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent color='secondary'>
@@ -178,16 +183,16 @@ const PodcastInfo = () => {
         )}
         {!loading && (
           <IonGrid>
-            {podcast.length !== 0 && (
+            {selectedPodcast.podcast.length !== 0 && (
               <IonRow>
-                <IonCol className='ion-no-padding' sizeSm='6' offsetSm='3'>
-                  <Card podcast={podcast} />
+                <IonCol className='ion-no-padding' sizeSm='5' offsetSm='3.5'>
+                  <Card podcast={selectedPodcast.podcast} />
                 </IonCol>
               </IonRow>
             )}
-            {episodes.length !== 0 && (
+            {selectedPodcast.episodes.length !== 0 && (
               <IonRow>
-                <IonCol sizeSm='10' offsetSm='1'>
+                <IonCol sizeSm='8' offsetSm='2'>
                   <IonList className='ion-no-padding'>
                     <IonListHeader color='dark'>
                       <h1 className='ion-text-center'>Episodes</h1>

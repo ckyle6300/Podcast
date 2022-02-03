@@ -19,7 +19,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import EpisodeModal from '../components/EpisodeModal';
 import Episodes from '../components/Episodes';
 import { playEpisode } from '../store/podcastInfoSlice';
-import { SpinnerTypes } from '@ionic/react';
 
 const RecentEpisodes = () => {
   const [episodes, setEpisodes] = useState([]);
