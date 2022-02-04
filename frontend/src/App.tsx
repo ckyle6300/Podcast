@@ -44,7 +44,7 @@ const App: React.FC = () => {
       <React.Suspense fallback={<h2>Waiting...</h2>}>
         <Layout>
           <IonReactRouter>
-            <IonSplitPane contentId='main' when='md'>
+            <IonSplitPane contentId='main'>
               <Menu />
               <IonRouterOutlet id='main'>
                 <Redirect path='/' exact to='/mypodcasts' />

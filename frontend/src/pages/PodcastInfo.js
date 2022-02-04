@@ -27,7 +27,7 @@ import { useSelector } from 'react-redux';
 import Card from '../components/Card';
 import Episodes from '../components/Episodes';
 import EpisodeModal from '../components/EpisodeModal';
-import { addToFavorites, localRdx } from '../store/local-storage';
+import { addToFavorites } from '../store/local-storage';
 import { sendPodcastData } from '../store/selectedPodcast';
 
 const PodcastInfo = () => {
@@ -50,17 +50,23 @@ const PodcastInfo = () => {
       await dispatch(sendPodcastData(podcastId));
     };
     getPodcastInfo();
+
     return () => {
       setFavorite(false);
       setLoading(true);
       setVisibleEpi([]);
     };
-  }, [podcastId]);
+  }, [podcastId, dispatch]);
 
   useEffect(() => {
-    setFavorite(!!podList[podcastId]);
-    setLoading(false);
+    try {
+      setFavorite(!!podList[podcastId]);
+    } catch (error) {}
+
     setVisibleEpi(selectedPodcast.episodes.slice(0, 10));
+    if (loading) {
+      setLoading(false);
+    }
   }, [selectedPodcast]);
 
   const buttonHandler = (idx) => {
@@ -103,7 +109,6 @@ const PodcastInfo = () => {
   const loadData = (ev) => {
     setTimeout(() => {
       pushData();
-      console.log('Loaded data');
       ev.target.complete();
       if (visibleEpi.length == selectedPodcast.episodes.length) {
         setInfiniteDisabled(true);
@@ -149,14 +154,14 @@ const PodcastInfo = () => {
           <IonGrid>
             {selectedPodcast.podcast.length !== 0 && (
               <IonRow>
-                <IonCol className='ion-no-padding' sizeSm='5' offsetSm='3.5'>
+                <IonCol className='ion-no-padding' sizeSm='6' offsetSm='3'>
                   <Card podcast={selectedPodcast.podcast} />
                 </IonCol>
               </IonRow>
             )}
             {selectedPodcast.episodes.length !== 0 && (
               <IonRow>
-                <IonCol sizeSm='8' offsetSm='2'>
+                <IonCol sizeSm='9' offsetSm='1.5'>
                   <IonList className='ion-no-padding'>
                     <IonListHeader color='dark'>
                       <h1 className='ion-text-center'>Episodes</h1>

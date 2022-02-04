@@ -10,7 +10,6 @@ import React from 'react';
 import styles from './Card.module.css';
 
 const Card = ({ podcast, clicker, address }) => {
-  const history = useHistory();
   let content;
 
   if (!clicker) {
@@ -42,7 +41,7 @@ const Card = ({ podcast, clicker, address }) => {
       <IonCard
         color='dark'
         className='ion-text-center'
-        onClick={() => history.push(address)}
+        routerLink={`/podcasts/${podcast.id}`}
       >
         <img src={podcast?.artwork} alt={`${podcast.title}`} />
         <IonCardHeader>

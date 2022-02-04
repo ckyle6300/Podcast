@@ -18,15 +18,16 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import EpisodeModal from '../components/EpisodeModal';
 import Episodes from '../components/Episodes';
-import { playEpisode } from '../store/podcastInfoSlice';
+import { playEpisode, playPodcast } from '../store/podcastInfoSlice';
+import { updateRecent } from '../store/selectedPodcast';
 
 const RecentEpisodes = () => {
-  const [episodes, setEpisodes] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const podList = useSelector((state) => state.localStore.podcastsRdx);
   const podInfo = useSelector((state) => state.podcastInfo);
+  const episodes = useSelector((state) => state.selected.recentEpisodes);
 
   const modalRef = useRef();
   const dispatch = useDispatch();
@@ -37,19 +38,12 @@ const RecentEpisodes = () => {
       try {
         podcastIds = Object.keys(podList);
       } catch (error) {
-        console.log('in error');
         setError(true);
         setLoading(false);
         return;
       }
-      const data = await fetch('http://localhost:5100/podcast/recent', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ podcastIds: podcastIds }),
-      });
 
-      const epi = await data.json();
-      setEpisodes(epi.items);
+      await dispatch(updateRecent(podcastIds));
       setLoading(false);
     };
 
@@ -58,30 +52,8 @@ const RecentEpisodes = () => {
 
   const buttonHandler = async (idx) => {
     const episode = episodes[idx];
-
     const podcast = podList[episode.feedId];
-
-    const data = await fetch('http://localhost:5100/podcast/chapters', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chapterUrl: episode.chaptersUrl }),
-    });
-
-    const chp = await data.json();
-
-    if (podInfo.count === 0) {
-      dispatch(
-        playEpisode.newPodcast({ pod: podcast, epi: episode, chapters: chp })
-      );
-    } else {
-      dispatch(
-        playEpisode.updatePodcast({
-          pod: podcast,
-          epi: episode,
-          chapters: chp,
-        })
-      );
-    }
+    dispatch(playPodcast(podcast, episode, podInfo.count));
   };
 
   const clickHandler = (epi, idx) => {
@@ -94,9 +66,6 @@ const RecentEpisodes = () => {
       podTitle: podcast.title,
     };
   };
-
-  console.log(podList);
-  console.log(episodes);
 
   return (
     <IonPage>

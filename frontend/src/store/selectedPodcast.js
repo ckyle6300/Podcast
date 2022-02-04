@@ -5,11 +5,17 @@ const selectedSlice = createSlice({
   initialState: {
     podcast: [],
     episodes: [],
+    recentEpisodes: [],
+    lastUpdated: undefined,
   },
   reducers: {
     updatePodcast(state, action) {
       state.podcast = action.payload.podcast;
       state.episodes = action.payload.episodes;
+    },
+    updateRecentPodcasts(state, action) {
+      state.recentEpisodes = action.payload.recent;
+      state.lastUpdated = Date.now();
     },
   },
 });
@@ -25,6 +31,20 @@ export const sendPodcastData = (podcastId) => {
         episodes: info.episodes.items,
       })
     );
+  };
+};
+
+export const updateRecent = (podcastIds) => {
+  return async (dispatch) => {
+    const data = await fetch('http://localhost:5100/podcast/recent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ podcastIds: podcastIds }),
+    });
+
+    const epi = await data.json();
+
+    dispatch(selectedPodcast.updateRecentPodcasts({ recent: epi.items }));
   };
 };
 

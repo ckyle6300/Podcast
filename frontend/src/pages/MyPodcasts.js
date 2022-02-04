@@ -37,7 +37,6 @@ const MyPodcasts = () => {
     }
   }, [podcastList]);
 
-  console.log(podcasts);
   return (
     <IonPage>
       <IonHeader>

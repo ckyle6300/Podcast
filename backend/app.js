@@ -12,6 +12,18 @@ app.use(bodyParser.json());
 
 app.use(cors());
 
+app.use(function (req, res, next) {
+  const period = 60 * 30;
+
+  if (req.method == 'GET') {
+    res.set('Cache-control', `public, max-age=${period}`);
+  } else {
+    res.set('Cache-control', `no-store`);
+  }
+
+  next();
+});
+
 app.use('/podcast', pocastRoutes);
 
 app.use('/', (req, res, next) => {
