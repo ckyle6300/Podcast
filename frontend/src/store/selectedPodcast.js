@@ -22,7 +22,9 @@ const selectedSlice = createSlice({
 
 export const sendPodcastData = (podcastId) => {
   return async (dispatch) => {
-    const req = await fetch(`http://localhost:5100/podcast/${podcastId}`);
+    const req = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/podcast/${podcastId}`
+    );
     const info = await req.json();
 
     dispatch(
@@ -36,11 +38,14 @@ export const sendPodcastData = (podcastId) => {
 
 export const updateRecent = (podcastIds) => {
   return async (dispatch) => {
-    const data = await fetch('http://localhost:5100/podcast/recent', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ podcastIds: podcastIds }),
-    });
+    const data = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/podcast/recent`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ podcastIds: podcastIds }),
+      }
+    );
 
     const epi = await data.json();
 

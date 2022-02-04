@@ -24,11 +24,14 @@ const Search = () => {
 
   useEffect(() => {
     const getUrl = async () => {
-      const data = await fetch('http://localhost:5100/podcast/search', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ search: userSearch }),
-      });
+      const data = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/podcast/search`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ search: userSearch }),
+        }
+      );
       const parsedData = await data.json();
 
       setPodcasts(parsedData.feeds);

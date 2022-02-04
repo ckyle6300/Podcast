@@ -26,11 +26,14 @@ const podcastSlice = createSlice({
 
 export const playPodcast = (podcast, episode, count) => {
   return async (dispatch) => {
-    const data = await fetch('http://localhost:5100/podcast/chapters', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chapterUrl: episode.chaptersUrl }),
-    });
+    const data = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/podcast/chapters`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chapterUrl: episode.chaptersUrl }),
+      }
+    );
 
     const chp = await data.json();
 
