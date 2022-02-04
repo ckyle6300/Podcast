@@ -48,6 +48,11 @@ const RecentEpisodes = () => {
     };
 
     getRecent();
+
+    return () => {
+      setError(false);
+      setLoading(true);
+    };
   }, [podList]);
 
   const buttonHandler = async (idx) => {

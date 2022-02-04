@@ -35,6 +35,10 @@ const MyPodcasts = () => {
     } catch (error) {
       setError(true);
     }
+
+    return () => {
+      setError(false);
+    };
   }, [podcastList]);
 
   return (
