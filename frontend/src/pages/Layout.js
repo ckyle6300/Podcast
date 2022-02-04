@@ -12,7 +12,6 @@ const Layout = (props) => {
   const podInfo = useSelector((state) => state.podcastInfo);
   const { episode, podcast, count, chapters } = podInfo;
   const [player, setPlayer] = useState();
-  const [show, setShow] = useState(false);
 
   useEffect(() => {
     const runCode = async () => {
@@ -40,7 +39,6 @@ const Layout = (props) => {
       }
 
       if (count === 5) {
-        setShow(true);
         await Shikwasa.use(Chapter);
         try {
           setPlayer(
@@ -66,7 +64,7 @@ const Layout = (props) => {
             })
           );
         } catch (error) {
-          console.log(error, 'hello');
+          // console.log(error, 'hello');
         }
       }
     };
@@ -75,14 +73,14 @@ const Layout = (props) => {
   }, [episode]);
 
   return (
-    <>
+    <IonPage>
       <IonContent>{props.children}</IonContent>
       <IonFooter
         collapse='fade'
         className={styles.foot}
         id='players'
       ></IonFooter>
-    </>
+    </IonPage>
   );
 };
 export default React.memo(Layout);

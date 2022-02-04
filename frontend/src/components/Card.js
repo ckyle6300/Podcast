@@ -5,17 +5,20 @@ import {
   IonCardTitle,
   IonImg,
 } from '@ionic/react';
-import { useHistory } from 'react-router';
 import React from 'react';
+import styles from './Card.module.css';
 
 const Card = ({ podcast, clicker, address }) => {
-  const history = useHistory();
   let content;
 
   if (!clicker) {
     content = (
       <IonCard color='dark' className='ion-text-center'>
-        <IonImg src={podcast?.artwork} alt={`${podcast.title}`} />
+        <IonImg
+          src={podcast?.artwork}
+          alt={`${podcast.title}`}
+          className={styles.image}
+        />
         <IonCardHeader>
           <IonCardTitle>{podcast?.title}</IonCardTitle>
           {podcast.description && (
@@ -37,7 +40,7 @@ const Card = ({ podcast, clicker, address }) => {
       <IonCard
         color='dark'
         className='ion-text-center'
-        onClick={() => history.push(address)}
+        routerLink={`/podcasts/${podcast.id}`}
       >
         <img src={podcast?.artwork} alt={`${podcast.title}`} />
         <IonCardHeader>

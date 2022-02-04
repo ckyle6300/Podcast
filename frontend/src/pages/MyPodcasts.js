@@ -23,16 +23,20 @@ import React, { useEffect, useState } from 'react';
 const MyPodcasts = () => {
   const podcastList = useSelector((state) => state.localStore.podcastsRdx);
   const [podcasts, setPodcasts] = useState();
+  const [error, setError] = useState(false);
   const history = useHistory();
   const searching = () => {
     history.push('/search');
   };
 
   useEffect(() => {
-    setPodcasts(Object.values(podcastList));
+    try {
+      setPodcasts(Object.values(podcastList));
+    } catch (error) {
+      setError(true);
+    }
   }, [podcastList]);
 
-  console.log(podcasts);
   return (
     <IonPage>
       <IonHeader>
@@ -44,10 +48,15 @@ const MyPodcasts = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent color='secondary'>
-        {!podcasts && (
+        {!podcasts && !error && (
           <IonLoading isOpen={true} message={'Loading...'} duration={5000} />
         )}
-        {podcasts && (
+        {(error || podcasts?.length == 0) && (
+          <div className='ion-text-center ion-padding-top'>
+            <h2>No Subscribed Podcasts</h2>
+          </div>
+        )}
+        {podcasts && !error && (
           <IonGrid>
             <IonRow>
               {podcasts &&
