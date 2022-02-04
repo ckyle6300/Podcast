@@ -110,7 +110,7 @@ const PodcastInfo = () => {
     setTimeout(() => {
       pushData();
       ev.target.complete();
-      if (visibleEpi.length == selectedPodcast.episodes.length) {
+      if (visibleEpi.length === selectedPodcast.episodes.length) {
         setInfiniteDisabled(true);
       }
     }, 200);

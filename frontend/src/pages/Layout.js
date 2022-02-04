@@ -73,14 +73,14 @@ const Layout = (props) => {
   }, [episode]);
 
   return (
-    <>
+    <IonPage>
       <IonContent>{props.children}</IonContent>
       <IonFooter
         collapse='fade'
         className={styles.foot}
         id='players'
       ></IonFooter>
-    </>
+    </IonPage>
   );
 };
 export default React.memo(Layout);

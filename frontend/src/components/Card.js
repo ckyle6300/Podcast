@@ -5,7 +5,6 @@ import {
   IonCardTitle,
   IonImg,
 } from '@ionic/react';
-import { useHistory } from 'react-router';
 import React from 'react';
 import styles from './Card.module.css';
 

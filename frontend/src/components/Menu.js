@@ -16,8 +16,6 @@ import { useLocation } from 'react-router-dom';
 import {
   caretForwardOutline,
   headset,
-  mailOutline,
-  mailSharp,
   searchOutline,
   searchSharp,
 } from 'ionicons/icons';
@@ -61,7 +59,7 @@ const Menu = () => {
     };
 
     getPods();
-  }, []);
+  }, [dispatch]);
 
   return (
     <IonMenu contentId='main' type='overlay' swipeGesture={true}>

@@ -1,13 +1,12 @@
 import React from 'react';
 import {
   IonApp,
-  IonContent,
   IonRouterOutlet,
   IonSplitPane,
   setupIonicReact,
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Route } from 'react-router-dom';
 import MyPodcasts from './pages/MyPodcasts';
 import Menu from './components/Menu';
 
